@@ -19,6 +19,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -46,6 +48,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
 import javax.swing.JToggleButton;
 import javax.swing.JList;
 import javax.swing.JComboBox;
@@ -58,11 +61,12 @@ public class JavaObjClientMain extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private String UserName;
-	private InputStream is;
-	private OutputStream os;
-	private DataInputStream dis;
-	private DataOutputStream dos;
-
+	
+	/* test code */
+	private Socket socket; // 연결소켓
+	public JavaObjClientMain testview;
+	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
+	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 
@@ -234,7 +238,9 @@ public class JavaObjClientMain extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JavaObjClientChatRoom view = new JavaObjClientChatRoom(username, ip_addr, port_no);				
+				SendRoomId("Sexy Room"); // 채팅방 개설 버튼 클릭 시 서버로 채팅방 이름 보냄 ( 현재는 방 한개만 생성되게 해둠 )
+//				JavaObjClientChatRoom view = new JavaObjClientChatRoom(username, ip_addr, port_no);				
+				testchatviews.add(new JavaObjClientChatRoom(username, "Sexy Room", testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달
 			}
 		});
 		contentPane.add(btnchatplus);
@@ -245,5 +251,132 @@ public class JavaObjClientMain extends JFrame {
 		contentPane.add(panel);
 		
 		setVisible(true);
+		
+		/* test code */
+		UserName = username;
+		testview = this;
+		
+		try {
+			socket = new Socket(ip_addr, Integer.parseInt(port_no));
+
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.flush();
+			ois = new ObjectInputStream(socket.getInputStream());
+
+			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
+			SendObject(obcm);
+			
+			ListenNetwork net = new ListenNetwork();
+			net.start();
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+//			AppendText("connect error");
+		}
+		
+
 	}
+	// Server Message를 수신해서 화면에 표시
+	class ListenNetwork extends Thread {
+		public void run() {
+			while (true) {
+				try {
+					Object obcm = null;
+					String msg = null;
+					ChatMsg cm;										
+					try {
+						obcm = ois.readObject();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						break;
+					}
+					if (obcm == null)
+						break;
+					if (obcm instanceof ChatMsg) {
+						cm = (ChatMsg) obcm;
+						// if(cm.getId().equals(UserName))
+							// 오른쪽에 출력
+						msg = String.format("[%s] %s", cm.getId(), cm.getData());
+					} else
+						continue;
+					switch (cm.getCode()) {
+						case "200": // chat message
+							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
+								if(testchatview.getRoomId() == "Sexy Room") { // 채팅방 이름을 검색해서 ( 현재는 한개의 방만 생성되게 해둠 )
+									testchatview.AppendText(msg); // 해당하는 채팅방에 AppendText 호출
+								}
+							}
+							break;
+						case "300": // Image 첨부
+							for(JavaObjClientChatRoom testchatview : testchatviews) {
+								if(testchatview.getRoomId() == "Sexy Room") {
+										testchatview.AppendText("[" + cm.getId() + "]");
+										testchatview.AppendImage(cm.img);
+								}
+							}
+							break;
+						case "301": // 더블클릭
+							for(JavaObjClientChatRoom testchatview : testchatviews) {
+								if(testchatview.getRoomId() == "Sexy Room") {
+										testchatview.AppendText("[" + cm.getId() + "]");
+										testchatview.AppendImage(cm.img);
+								}
+							}
+							break;
+						case "302": // 한번 클릭
+							for(JavaObjClientChatRoom testchatview : testchatviews) {
+								if(testchatview.getRoomId() == "Sexy Room") {
+									testchatview.panelIMG=cm.img;
+									testchatview.EmoLabel.setVisible(true);
+									testchatview.EmoLabel.setIcon(cm.img);
+									testchatview.EmoLabel.repaint();
+								}
+							}
+							break;
+						case "500":
+							for(JavaObjClientChatRoom testchatview : testchatviews) {
+								if(testchatview.getRoomId() == "Sexy Room") {
+									testchatview.AppendText("[" + cm.getId() + "] " + cm.filename);
+									testchatview.AppendFile(cm.file, cm.filename);
+								}
+							}
+							break;					
+							}
+					}
+				 catch (IOException e) {
+//					AppendText("ois.readObject() error");
+					try {
+						ois.close();
+						oos.close();
+						socket.close();
+
+						break;
+					} catch (Exception ee) {
+						break;
+					} // catch문 끝
+				} // 바깥 catch문끝
+
+			}
+		}
+	}
+	public void SendObject(Object ob) { // 서버로 메세지를 보내는 메소드
+		try {
+			oos.writeObject(ob);
+		} catch (IOException e) {
+//			AppendText("SendObject Error");
+		}
+	}
+	
+	/* test code */
+	public void SendRoomId(String room_id) { // 버튼 클릭 시 
+		try {
+			ChatMsg obcm = new ChatMsg(UserName, "999", room_id);
+			oos.writeObject(obcm);
+		} catch (IOException e) {
+//			AppendText("SendObject Error");
+		}
+	}
+
+
 }

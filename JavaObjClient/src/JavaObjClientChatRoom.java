@@ -11,15 +11,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.security.PublicKey;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.print.attribute.standard.JobOriginatingUserName;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,8 +26,6 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.color.CMMException;
 import java.awt.Color;
 import java.awt.Cursor;
 
@@ -45,7 +40,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel EmoLabel;
+	public JLabel EmoLabel;
 	private JTextField txtInput;
 	private String UserName;
 	private JButton btnSend;
@@ -60,6 +55,8 @@ public class JavaObjClientChatRoom extends JFrame {
 	
 	public EmojiView emoji;
 	public JavaObjClientChatRoom view;
+	public JavaObjClientMain testview; // 메인 뷰를 담을 뷰
+	private String room_id;
 	//frame위치
 	public int frameX;
 	public int frameY;
@@ -75,8 +72,10 @@ public class JavaObjClientChatRoom extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JavaObjClientChatRoom(String username, String ip_addr, String port_no) {
-		
+	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain testview) {
+		view = this;
+		this.room_id = room_id; // 채팅방 이름
+		this.testview = testview; // 메인뷰
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 394, 630);
@@ -217,107 +216,123 @@ public class JavaObjClientChatRoom extends JFrame {
 		panel.setBackground(Color.white);
 		contentPane.add(panel);
 		
-		view=this;
-				
-		try {
-			socket = new Socket(ip_addr, Integer.parseInt(port_no));
 
-			oos = new ObjectOutputStream(socket.getOutputStream());
-			oos.flush();
-			ois = new ObjectInputStream(socket.getInputStream());
+// 소켓 생성은 및 데이터 주고받는건 Main에서만 ( 제거 예정 )
+//		try {
+//			socket = new Socket(ip_addr, Integer.parseInt(port_no));
+//
+//			oos = new ObjectOutputStream(socket.getOutputStream());
+//			oos.flush();
+//			ois = new ObjectInputStream(socket.getInputStream());
+//
+//			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
+//			SendObject(obcm);
+//			
+//			ListenNetwork net = new ListenNetwork();
+//			net.start();
+//			TextSendAction action = new TextSendAction();
+//			btnSend.addActionListener(action);
+//			txtInput.addActionListener(action);
+//			txtInput.requestFocus();
+//			ImageSendAction action2 = new ImageSendAction();
+//			imgBtn.addActionListener(action2);
+//			ListSendAction action3 = new ListSendAction(); 
+//			listbtn.addActionListener(action3);
+//			FileSendAction action4 = new FileSendAction();
+//			filebtn.addActionListener(action4);
+//			EmoticonSendAction action5 = new EmoticonSendAction();
+//			emobtn.addActionListener(action5);
+//			
+//
+//
+//		} catch (NumberFormatException | IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			AppendText("connect error");
+//		}
 
-			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
-			SendObject(obcm);
-			
-			ListenNetwork net = new ListenNetwork();
-			net.start();
-			TextSendAction action = new TextSendAction();
-			btnSend.addActionListener(action);
-			txtInput.addActionListener(action);
-			txtInput.requestFocus();
-			ImageSendAction action2 = new ImageSendAction();
-			imgBtn.addActionListener(action2);
-			ListSendAction action3 = new ListSendAction(); 
-			listbtn.addActionListener(action3);
-			FileSendAction action4 = new FileSendAction();
-			filebtn.addActionListener(action4);
-			EmoticonSendAction action5 = new EmoticonSendAction();
-			emobtn.addActionListener(action5);
-			
+		/* test code */ // 액션 리스너만 생성
+		TextSendAction action = new TextSendAction();
+		btnSend.addActionListener(action);
+		txtInput.addActionListener(action);
+		txtInput.requestFocus();
+		ImageSendAction action2 = new ImageSendAction();
+		imgBtn.addActionListener(action2);
+		ListSendAction action3 = new ListSendAction(); 
+		listbtn.addActionListener(action3);
+		FileSendAction action4 = new FileSendAction();
+		filebtn.addActionListener(action4);
+		EmoticonSendAction action5 = new EmoticonSendAction();
+		emobtn.addActionListener(action5);
 
 
-		} catch (NumberFormatException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			AppendText("connect error");
-		}
-
+		
 	}
 	
-	// Server Message를 수신해서 화면에 표시
-	class ListenNetwork extends Thread {
-		public void run() {
-			while (true) {
-				try {
-					Object obcm = null;
-					String msg = null;
-					ChatMsg cm;
-										
-					try {
-						obcm = ois.readObject();
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						break;
-					}
-					if (obcm == null)
-						break;
-					if (obcm instanceof ChatMsg) {
-						cm = (ChatMsg) obcm;
-						// if(cm.getId().equals(UserName))
-							// 오른쪽에 출력
-						msg = String.format("[%s] %s", cm.getId(), cm.getData());
-					} else
-						continue;
-					switch (cm.getCode()) {
-					case "200": // chat message
-						AppendText(msg);
-						break;				
-					case "300": // Image 첨부
-						AppendText("[" + cm.getId() + "]");
-						AppendImage(cm.img);
-						break;
-					case "301": // 더블클릭
-						AppendText("[" + cm.getId() + "]");
-						AppendImage(cm.img);
-						break;
-					case "302": // 한번 클릭
-						panelIMG=cm.img;
-						EmoLabel.setVisible(true);
-						EmoLabel.setIcon(cm.img);
-						EmoLabel.repaint();
-						break;
-					case "500":
-						AppendText("[" + cm.getId() + "] " + cm.filename);
-						AppendFile(cm.file, cm.filename);
-						break;					
-					}
-				} catch (IOException e) {
-					AppendText("ois.readObject() error");
-					try {
-						ois.close();
-						oos.close();
-						socket.close();
-
-						break;
-					} catch (Exception ee) {
-						break;
-					} // catch문 끝
-				} // 바깥 catch문끝
-
-			}
-		}
-	}
+//	// Server Message를 수신해서 화면에 표시
+//	class ListenNetwork extends Thread {
+//		public void run() {
+//			while (true) {
+//				try {
+//					Object obcm = null;
+//					String msg = null;
+//					ChatMsg cm;
+//										
+//					try {
+//						obcm = ois.readObject();
+//					} catch (ClassNotFoundException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//						break;
+//					}
+//					if (obcm == null)
+//						break;
+//					if (obcm instanceof ChatMsg) {
+//						cm = (ChatMsg) obcm;
+//						// if(cm.getId().equals(UserName))
+//							// 오른쪽에 출력
+//						msg = String.format("[%s] %s", cm.getId(), cm.getData());
+//					} else
+//						continue;
+//					switch (cm.getCode()) {
+//					case "200": // chat message
+//						AppendText(msg);
+//						break;				
+//					case "300": // Image 첨부
+//						AppendText("[" + cm.getId() + "]");
+//						AppendImage(cm.img);
+//						break;
+//					case "301": // 더블클릭
+//						AppendText("[" + cm.getId() + "]");
+//						AppendImage(cm.img);
+//						break;
+//					case "302": // 한번 클릭
+//						panelIMG=cm.img;
+//						EmoLabel.setVisible(true);
+//						EmoLabel.setIcon(cm.img);
+//						EmoLabel.repaint();
+//						break;
+//					case "500":
+//						AppendText("[" + cm.getId() + "] " + cm.filename);
+//						AppendFile(cm.file, cm.filename);
+//						break;					
+//					}
+//				} catch (IOException e) {
+//					AppendText("ois.readObject() error");
+//					try {
+//						ois.close();
+//						oos.close();
+//						socket.close();
+//
+//						break;
+//					} catch (Exception ee) {
+//						break;
+//					} // catch문 끝
+//				} // 바깥 catch문끝
+//
+//			}
+//		}
+//	}
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -415,8 +430,9 @@ public class JavaObjClientChatRoom extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == listbtn) {
-				ChatMsg obcm = new ChatMsg(UserName, "600", "LIST"); // 600 전송
-				SendObject(obcm);
+//				ChatMsg obcm = new ChatMsg(UserName, "600", "LIST"); // 600 전송
+//				SendObject(obcm);
+//				SendRoomId("Sexy Room");
 			}
 		}
 	}
@@ -441,6 +457,10 @@ public class JavaObjClientChatRoom extends JFrame {
 	ImageIcon icon1 = new ImageIcon("src/icon1.jpg");
 	ImageIcon icon2 = new ImageIcon("src/icon2.jpg");
 	private JPanel panel_1;
+
+	public String getRoomId() {
+		return this.room_id ;
+	};
 
 
 	public void AppendIcon(ImageIcon icon) {
@@ -592,30 +612,46 @@ public class JavaObjClientChatRoom extends JFrame {
 	// Server에게 network으로 전송
 	public void SendMessage(String msg) {
 		EmoLabel.setVisible(false);
-		try {
-			ChatMsg obcm = new ChatMsg(UserName, "200", msg);
-			oos.writeObject(obcm);
-		} catch (IOException e) {
-			AppendText("oos.writeObject() error");
-			try {
-				ois.close();
-				oos.close();
-				socket.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				System.exit(0);
-			}
-		}
+//		try {
+//			ChatMsg obcm = new ChatMsg(UserName, "200", msg);
+//			testview.SendObject(obcm);
+//			oos.writeObject(obcm);
+//		} 
+//		catch (IOException e) {
+//			AppendText("oos.writeObject() error");
+//			try {
+//				ois.close();
+//				oos.close();
+//				socket.close();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//				System.exit(0);
+//			}
+//		}
+		ChatMsg obcm = new ChatMsg(UserName, "200", msg);
+		testview.SendObject(obcm); // 메인 뷰의 SendObject를 호출
 	}
 
 
 	public void SendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		EmoLabel.setVisible(false);
-		try {
-			oos.writeObject(ob);
-		} catch (IOException e) {
-			AppendText("SendObject Error");
-		}
+//		try {
+//			oos.writeObject(ob);
+//		} catch (IOException e) {
+//			AppendText("SendObject Error");
+//		}
+		testview.SendObject(ob); // 메인 뷰의 SendObject를 호출
+
 	}
+
+//	/* test code */
+//	public void SendRoomId(String room_id) {
+//		try {
+//			ChatMsg obcm = new ChatMsg(UserName, "999", room_id);
+//			oos.writeObject(obcm);
+//		} catch (IOException e) {
+//			AppendText("SendObject Error");
+//		}
+//	}
 }

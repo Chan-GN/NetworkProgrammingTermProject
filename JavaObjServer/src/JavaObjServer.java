@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -158,6 +160,9 @@ public class JavaObjServer extends JFrame {
 		public String UserName = "";
 		public String UserStatus;
 
+		/* test code */
+		public List<String> room_ids = new ArrayList<String>();
+		
 		public UserService(Socket client_socket) {
 			// TODO Auto-generated constructor stub
 			// 매개변수로 넘어온 자료 저장
@@ -390,6 +395,10 @@ public class JavaObjServer extends JFrame {
 						UserStatus = "O";
 					} else if (cm.getCode().equals("500")) {
 						WriteAllObject(cm);
+					} else if (cm.getCode().equals("999")) { // 채팅방 ID를 받으면
+						WriteAllObject(cm); // 방이 하나만 있으니 모두에게 방송
+						System.out.println(cm.getData()); // 채팅방 ID 콘솔에 찍어보고
+						room_ids.add(cm.getData()); // 채팅방 ID 리스트에 채팅방 ID 추가 
 					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");

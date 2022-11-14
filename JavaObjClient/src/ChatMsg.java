@@ -7,14 +7,16 @@ import javax.swing.ImageIcon;
 class ChatMsg implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500:File, 600:유저 리스트
+	private String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500:File, 600:유저 리스트 999:테스트
 	private String data;
 	public ImageIcon img;
 	public ImageIcon emoji;
 	public byte[] file;
 	public String filename;
-
-
+	
+	/* test code */
+	public String room_id;
+	
 	public ChatMsg(String id, String code, String msg) {
 		this.id = id;
 		this.code = code;
@@ -58,6 +60,15 @@ class ChatMsg implements Serializable {
 	
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	
+	/* test code */
+	public String getRoomId() {
+		return room_id;
+	}
+	
+	public void setRoomId(String room_id) {
+		this.room_id = room_id;
 	}
 
 }
