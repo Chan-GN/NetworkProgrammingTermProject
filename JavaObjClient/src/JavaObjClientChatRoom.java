@@ -77,7 +77,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		this.room_id = room_id; // 채팅방 이름
 		this.testview = testview; // 메인뷰
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 394, 630);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -85,9 +85,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 10, 352, 467);
-		scrollPane.getViewport().setOpaque(false);
+		
 		
 
 		ImageIcon close_img = new ImageIcon("src/closebtn.png");
@@ -110,20 +108,24 @@ public class JavaObjClientChatRoom extends JFrame {
 		
 		EmoLabel.setOpaque(false);
 		EmoLabel.setBackground(new Color(192, 192, 192, 80));		
-				EmoLabel.setHorizontalAlignment(JLabel.RIGHT);
-				contentPane.add(EmoLabel);
+		EmoLabel.setHorizontalAlignment(JLabel.RIGHT);
+		contentPane.add(EmoLabel);
+		EmoLabel.setVisible(false);
+		JButton closebtn = new JButton(close_img);
+		closebtn.setBounds(350, 0, 20, 20);
+		closebtn.setBorder(BorderFactory.createEmptyBorder());
+		//closebtn.setContentAreaFilled(false);
+		closebtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				EmoLabel.setVisible(false);
-				JButton closebtn = new JButton(close_img);
-				closebtn.setBounds(350, 0, 20, 20);
-				closebtn.setBorder(BorderFactory.createEmptyBorder());
-				//closebtn.setContentAreaFilled(false);
-				closebtn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						EmoLabel.setVisible(false);
-						EmoLabel.repaint();
-					}
-				});
-				EmoLabel.add(closebtn);
+				EmoLabel.repaint();
+			}
+		});
+		EmoLabel.add(closebtn);
+				
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 10, 352, 467);
+		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setOpaque(false);
 		scrollPane.setBorder(null);
 		contentPane.add(scrollPane);
