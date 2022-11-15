@@ -2,6 +2,9 @@
 // ChatMsg.java 채팅 메시지 ObjectStream 용.
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 class ChatMsg implements Serializable {
@@ -16,6 +19,8 @@ class ChatMsg implements Serializable {
 	
 	/* test code */
 	public String room_id;
+	
+	public List<String> user_list = new ArrayList<String>();
 	
 	public ChatMsg(String id, String code, String msg) {
 		this.id = id;

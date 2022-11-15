@@ -30,6 +30,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.imageio.ImageIO;
+import javax.management.AttributeList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -66,6 +67,8 @@ public class JavaObjClientMain extends JFrame {
 	private Socket socket; // 연결소켓
 	public JavaObjClientMain testview;
 	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
+	
+	public List<String> user_list=new ArrayList<>(); 
 	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -264,6 +267,7 @@ public class JavaObjClientMain extends JFrame {
 			ois = new ObjectInputStream(socket.getInputStream());
 
 			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
+			obcm.user_list.add(UserName);
 			SendObject(obcm);
 			
 			ListenNetwork net = new ListenNetwork();
@@ -341,7 +345,7 @@ public class JavaObjClientMain extends JFrame {
 									testchatview.AppendFile(cm.file, cm.filename);
 								}
 							}
-							break;					
+							break;			
 							}
 					}
 				 catch (IOException e) {
