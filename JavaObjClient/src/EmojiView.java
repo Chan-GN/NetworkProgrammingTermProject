@@ -101,7 +101,7 @@ public class EmojiView extends JFrame {
 		
 		
 		JPanel panel = new JPanel(new GridLayout(6,3));
-		
+		panel.setBackground(Color.white);
 
 
 		scrollPane = new JScrollPane(panel);
