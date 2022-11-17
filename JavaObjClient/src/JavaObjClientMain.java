@@ -418,7 +418,6 @@ public class JavaObjClientMain extends JFrame {
 							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.getData());
 							System.out.println(cm.getData());
 							chatRoomArea.insertComponent(chatroombox_test);
-							chatRoomArea.replaceSelection("\n");
 							String username = cm.getId();
 							if(UserName.equals(username)) {
 									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview));
