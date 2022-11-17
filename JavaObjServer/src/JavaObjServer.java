@@ -146,7 +146,7 @@ public class JavaObjServer extends JFrame {
 		textArea.append("data = " + msg.getData() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
-
+	public List<String> user_list = new ArrayList<String>();
 	// User 당 생성되는 Thread
 	// Read One 에서 대기 -> Write All
 	class UserService extends Thread {
@@ -165,6 +165,7 @@ public class JavaObjServer extends JFrame {
 
 		/* test code */
 		public List<String> room_ids = new ArrayList<String>();
+
 		
 		public UserService(Socket client_socket) {
 			// TODO Auto-generated constructor stub
@@ -181,11 +182,11 @@ public class JavaObjServer extends JFrame {
 		}
 
 		public void Login() {
-			AppendText("새로운 참가자 " + UserName + " 입장.");
-			WriteOne("Welcome to Java chat server\n");
-			WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
-			String msg = "[" + UserName + "]님이 입장 하였습니다.\n";
-			WriteOthers(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
+			//AppendText("새로운 참가자 " + UserName + " 입장.");
+			//WriteOne("Welcome to Java chat server\n");
+			//WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
+			String msg = user_list.toString();
+			WriteAll(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
 		}
 
 		public void Logout() {
@@ -247,9 +248,7 @@ public class JavaObjServer extends JFrame {
 //				bb = MakePacket(msg);
 //				dos.write(bb, 0, bb.length);
 //				ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
-				
-			
-				ChatMsg obcm = new ChatMsg("SERVER", "600", msg);
+				ChatMsg obcm = new ChatMsg("SERVER", "777", msg);
 				oos.writeObject(obcm);
 			} catch (IOException e) {
 				AppendText("dos.writeObject() error");
@@ -336,6 +335,7 @@ public class JavaObjServer extends JFrame {
 					if (cm.getCode().equals("100")) {
 						UserName = cm.getId();
 						UserStatus = "O"; // Online 상태
+						user_list.add(UserName);	
 						Login();
 					} else if (cm.getCode().matches("200")) {
 						msg = String.format("[%s] %s", cm.getId(), cm.getData());
@@ -399,9 +399,9 @@ public class JavaObjServer extends JFrame {
 //					else if (cm.getCode().equals("600")) {
 //						UserStatus = "S";
 //					} 
-//					else if (cm.getCode().equals("700")) {
-//						UserStatus = "O";
-//					} 
+					else if (cm.getCode().equals("777")) {
+						System.out.print(user_list);
+					} 
 					else if (cm.getCode().equals("500")) {
 						WriteAllObject(cm);
 					} else if (cm.getCode().equals("999")) { // 채팅방 ID를 받으면

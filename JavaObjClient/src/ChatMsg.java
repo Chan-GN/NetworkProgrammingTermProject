@@ -20,7 +20,7 @@ class ChatMsg implements Serializable {
 	/* test code */
 	public String room_id;
 	
-	public List<String> user_list = new ArrayList<String>();
+	public String user_list;
 	
 	public ChatMsg(String id, String code, String msg) {
 		this.id = id;

@@ -73,7 +73,7 @@ public class JavaObjClientMain extends JFrame {
 	private String test_roomid = ""; // 고유한 룸 아이디
 	private JLabel testLabel; // chatRoomBox에 룸 아이디를 적어주는 라벨
 	
-	public List<String> user_list=new ArrayList<>();
+	public String[] user_list;
 	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -282,8 +282,6 @@ public class JavaObjClientMain extends JFrame {
 			ois = new ObjectInputStream(socket.getInputStream());
 
 			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
-			obcm.user_list.add(UserName);
-			
 			SendObject(obcm);
 			
 			ListenNetwork net = new ListenNetwork();
@@ -364,6 +362,10 @@ public class JavaObjClientMain extends JFrame {
 							break;
 						case "600": // 현재 접속한 유저 리스트를 받음
 //							System.out.println(cm.getData());
+							break;
+						case "777":
+							String a = cm.getData().substring(1, cm.getData().length()-1).replaceAll(" ","");
+							user_list=a.split(",");
 							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
