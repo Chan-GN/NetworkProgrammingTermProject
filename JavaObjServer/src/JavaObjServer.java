@@ -165,6 +165,7 @@ public class JavaObjServer extends JFrame {
 
 		/* test code */
 		public List<String> room_ids = new ArrayList<String>();
+
 		
 		
 		public UserService(Socket client_socket) {
