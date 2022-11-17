@@ -1,24 +1,14 @@
 
 // JavaObjClientView.java ObjecStram 기반 Client
 //실질적인 채팅 창
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.nio.Buffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,33 +18,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Label;
 import java.awt.Color;
 import java.awt.Cursor;
 
-import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-
-import javax.swing.JToggleButton;
-import javax.swing.JList;
-import javax.swing.JComboBox;
-import javax.swing.JCheckBox;
 
 public class JavaObjClientMain extends JFrame {
 	/**
@@ -69,9 +41,7 @@ public class JavaObjClientMain extends JFrame {
 	public JavaObjClientMain testview; // view 상속을 위해 view 선언
 	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
 	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
-	private JPanel chatRoomBox; // 방 생성시마다 생성될 채팅방 패널
 	private String test_roomid = ""; // 고유한 룸 아이디
-	private JLabel testLabel; // chatRoomBox에 룸 아이디를 적어주는 라벨
 	
 	public String[] user_list;
 	
@@ -370,21 +340,9 @@ public class JavaObjClientMain extends JFrame {
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
-							chatRoomBox = new JPanel();
-							chatRoomBox.setLayout(new BorderLayout(25,25));
-							testLabel = new JLabel();
-							testLabel.setFont(new Font("굴림체", Font.PLAIN, 14));
-							testLabel.setText(cm.getData());
-							JLabel borderLabel = new JLabel();
-							borderLabel.setBorder(null);
-							/* test code, 라벨의 위치 및 패널의 높이 변경해봄 */
-							chatRoomBox.add(new JLabel(), BorderLayout.NORTH);
-							chatRoomBox.add(new JLabel(), BorderLayout.EAST);
-							chatRoomBox.add(testLabel, BorderLayout.CENTER);
-							chatRoomBox.add(new JLabel(), BorderLayout.WEST);
-							chatRoomBox.add(new JLabel(), BorderLayout.SOUTH);
-							chatRoomBox.setBackground(Color.white);
-							chatRoomBox.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
+							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.getData());
+							System.out.println(cm.getData());
+							chatroombox_test.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
 								@Override
 								public void mouseClicked(MouseEvent e) {
 									// TODO Auto-generated method stub
@@ -415,8 +373,7 @@ public class JavaObjClientMain extends JFrame {
 									// TODO Auto-generated method stub
 								}			
 							});
-							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.getData());
-							System.out.println(cm.getData());
+
 							chatRoomArea.insertComponent(chatroombox_test);
 							String username = cm.getId();
 							if(UserName.equals(username)) {
