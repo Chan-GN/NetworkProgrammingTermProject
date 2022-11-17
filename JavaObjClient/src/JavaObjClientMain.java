@@ -73,7 +73,7 @@ public class JavaObjClientMain extends JFrame {
 	private String test_roomid = ""; // 고유한 룸 아이디
 	private JLabel testLabel; // chatRoomBox에 룸 아이디를 적어주는 라벨
 	
-	public List<String> user_list=new ArrayList<>();
+	public String[] user_list;
 	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -256,7 +256,7 @@ public class JavaObjClientMain extends JFrame {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
 				test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
 				SendRoomId(test_roomid); // 서버로 채팅방 이름 보냄
-				testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달, 추후 채팅방 유저 리스트 추가 요망
+//				testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달, 추후 채팅방 유저 리스트 추가 요망
 				for(JavaObjClientChatRoom testchatview : testchatviews) {
 //					System.out.println(testchatview.getRoomId());
 				}
@@ -282,8 +282,6 @@ public class JavaObjClientMain extends JFrame {
 			ois = new ObjectInputStream(socket.getInputStream());
 
 			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
-			obcm.user_list.add(UserName);
-			
 			SendObject(obcm);
 			
 			ListenNetwork net = new ListenNetwork();
@@ -365,6 +363,10 @@ public class JavaObjClientMain extends JFrame {
 						case "600": // 현재 접속한 유저 리스트를 받음
 //							System.out.println(cm.getData());
 							break;
+						case "777":
+							String a = cm.getData().substring(1, cm.getData().length()-1).replaceAll(" ","");
+							user_list=a.split(",");
+							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
@@ -413,8 +415,14 @@ public class JavaObjClientMain extends JFrame {
 									// TODO Auto-generated method stub
 								}			
 							});
-							chatRoomArea.insertComponent(chatRoomBox);
+							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.getData());
+							System.out.println(cm.getData());
+							chatRoomArea.insertComponent(chatroombox_test);
 							chatRoomArea.replaceSelection("\n");
+							String username = cm.getId();
+							if(UserName.equals(username)) {
+									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview));
+							}
 							break;
 						}
 					}

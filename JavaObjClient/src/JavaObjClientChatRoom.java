@@ -69,7 +69,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain testview) {
+	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain testview) { // username을 맨 앞으로 해서 방 이름 생성하면 고유한 ID 생성됨 // UserList도 인자에 추가
 		view = this;
 		this.room_id = room_id; // 채팅방 이름
 		this.testview = testview; // 메인뷰
