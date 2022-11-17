@@ -19,7 +19,9 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.nio.Buffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -64,16 +66,17 @@ public class JavaObjClientMain extends JFrame {
 	
 	/* test code */
 	private Socket socket; // 연결소켓
-	public JavaObjClientMain testview;
+	public JavaObjClientMain testview; // view 상속을 위해 view 선언
 	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
+	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
+	private JPanel chatRoomBox; // 방 생성시마다 생성될 채팅방 패널
+	private String test_roomid = ""; // 고유한 룸 아이디
+	private JLabel testLabel; // chatRoomBox에 룸 아이디를 적어주는 라벨
 	
 	public List<String> user_list=new ArrayList<>();
 	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
-
-	private Frame frame;
-	private FileDialog fd;
 	
 	public JButton btnfriend;
 	public JButton btnchat;
@@ -99,6 +102,14 @@ public class JavaObjClientMain extends JFrame {
 		chat_scrollPane.setBorder(null);
 		contentPane.add(chat_scrollPane);
 		
+		/* test code */
+		chatRoomArea = new JTextPane();
+		chatRoomArea.setEditable(true);
+		chatRoomArea.setFont(new Font("굴림체", Font.PLAIN, 14));
+		chatRoomArea.setOpaque(false);
+		chat_scrollPane.setViewportView(chatRoomArea); // scrollpane에 chatRoomArea 추가
+
+		
 		JScrollPane friend_scrollPane = new JScrollPane();
 		friend_scrollPane.setBounds(64, 65, 320, 528);
 		friend_scrollPane.getViewport().setOpaque(false);
@@ -109,12 +120,8 @@ public class JavaObjClientMain extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("친구"); // 테스트 라벨
 		friend_scrollPane.setColumnHeaderView(lblNewLabel_1);
 		friend_scrollPane.setVisible(false);
-		
-
-		JLabel lblNewLabel = new JLabel("채팅"); // 테스트 라벨
-		chat_scrollPane.setColumnHeaderView(lblNewLabel);
-		
-		JLabel chatLabel = new JLabel("채팅");
+				
+		JLabel chatLabel = new JLabel("채팅"); // 디폴트 : 채팅
 		chatLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		chatLabel.setBounds(80, 25, 50, 32);
 		contentPane.add(chatLabel);
@@ -134,16 +141,19 @@ public class JavaObjClientMain extends JFrame {
 		btnfriend.setContentAreaFilled(false);
 		btnfriend.getCursor();
 		btnfriend.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnfriend.addActionListener(new ActionListener() {
+		btnfriend.addActionListener(new ActionListener() { // 친구 버튼 을 누르면
 			public void actionPerformed(ActionEvent e) {
 				chat_scrollPane.setVisible(false);
 				friend_scrollPane.setVisible(true);
-				chatLabel.setText("친구");
+				chatLabel.setText("친구"); // 친구로 라벨 변경
 				btnfriend.setIcon(friend_icon_c);
 				btnchat.setIcon(chat_icon_n);
+				// test code, 친구 버튼 클릭 시 서버에게 접속자 리스트 요청
+//				ChatMsg obcm = new ChatMsg(UserName, "600", "LIST");
+//				SendObject(obcm);
 			}
 		});
-		btnfriend.addMouseListener(new MouseListener() {
+		btnfriend.addMouseListener(new MouseListener() { // 버튼에 커서 이벤트 적용
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -159,13 +169,13 @@ public class JavaObjClientMain extends JFrame {
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/friend_test.png")
+				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/friendbtn_c.png")
 					btnfriend.setIcon(friend_icon_n);
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/friend_test.png")
+				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/friendbtn_c.png")
 					btnfriend.setIcon(friend_icon_o);
 				
 			}
@@ -185,16 +195,16 @@ public class JavaObjClientMain extends JFrame {
 		btnchat.setFocusPainted(false);
 		btnchat.getCursor();
 		btnchat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));		
-		btnchat.addActionListener(new ActionListener() {
+		btnchat.addActionListener(new ActionListener() { // 채팅 버튼을 누르면
 			public void actionPerformed(ActionEvent e) {
 				chat_scrollPane.setVisible(true);
 				friend_scrollPane.setVisible(false);
-				chatLabel.setText("채팅");
+				chatLabel.setText("채팅"); // 채팅으로 라벨 변경
 				btnfriend.setIcon(friend_icon_n);
 				btnchat.setIcon(chat_icon_c);
 			}
 		});
-		btnchat.addMouseListener(new MouseListener() {
+		btnchat.addMouseListener(new MouseListener() { // 버튼에 커서 이벤트 적용
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -238,13 +248,18 @@ public class JavaObjClientMain extends JFrame {
 		btnchatplus.setContentAreaFilled(false);
 		btnchatplus.getCursor();
 		btnchatplus.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnchatplus.addActionListener(new ActionListener() {
+		btnchatplus.addActionListener(new ActionListener() { // 채팅방 추가 버튼 클릭 리스너
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) { // 버튼이 눌리면
 				// TODO Auto-generated method stub
-				SendRoomId("Sexy Room"); // 채팅방 개설 버튼 클릭 시 서버로 채팅방 이름 보냄 ( 현재는 방 한개만 생성되게 해둠 )
-//				JavaObjClientChatRoom view = new JavaObjClientChatRoom(username, ip_addr, port_no);				
-				testchatviews.add(new JavaObjClientChatRoom(username, "Sexy Room", testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달
+				Date now = new Date(); // 현재 날짜 및 시간을 계산해서
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
+				test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
+				SendRoomId(test_roomid); // 서버로 채팅방 이름 보냄
+				testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달, 추후 채팅방 유저 리스트 추가 요망
+				for(JavaObjClientChatRoom testchatview : testchatviews) {
+//					System.out.println(testchatview.getRoomId());
+				}
 			}
 		});
 		contentPane.add(btnchatplus);
@@ -256,9 +271,8 @@ public class JavaObjClientMain extends JFrame {
 		
 		setVisible(true);
 		
-		/* test code */
 		UserName = username;
-		testview = this;
+		testview = this; // 뷰 상속을 위해
 		
 		try {
 			socket = new Socket(ip_addr, Integer.parseInt(port_no));
@@ -309,30 +323,30 @@ public class JavaObjClientMain extends JFrame {
 					switch (cm.getCode()) {
 						case "200": // chat message
 							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId() == "Sexy Room") { // 채팅방 이름을 검색해서 ( 현재는 한개의 방만 생성되게 해둠 )
+								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
 									testchatview.AppendText(msg); // 해당하는 채팅방에 AppendText 호출
 								}
 							}
 							break;
 						case "300": // Image 첨부
-							for(JavaObjClientChatRoom testchatview : testchatviews) {
-								if(testchatview.getRoomId() == "Sexy Room") {
+							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
+								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
 										testchatview.AppendText("[" + cm.getId() + "]");
 										testchatview.AppendImage(cm.img);
 								}
 							}
 							break;
 						case "301": // 더블클릭
-							for(JavaObjClientChatRoom testchatview : testchatviews) {
-								if(testchatview.getRoomId() == "Sexy Room") {
+							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
+								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
 										testchatview.AppendText("[" + cm.getId() + "]");
 										testchatview.AppendImage(cm.img);
 								}
 							}
 							break;
 						case "302": // 한번 클릭
-							for(JavaObjClientChatRoom testchatview : testchatviews) {
-								if(testchatview.getRoomId() == "Sexy Room") {
+							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
+								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
 									testchatview.panelIMG=cm.img;
 									testchatview.EmoLabel.setVisible(true);
 									testchatview.EmoLabel.setIcon(cm.img);
@@ -341,14 +355,68 @@ public class JavaObjClientMain extends JFrame {
 							}
 							break;
 						case "500":
-							for(JavaObjClientChatRoom testchatview : testchatviews) {
-								if(testchatview.getRoomId() == "Sexy Room") {
+							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
+								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
 									testchatview.AppendText("[" + cm.getId() + "] " + cm.filename);
 									testchatview.AppendFile(cm.file, cm.filename);
 								}
 							}
-							break;					
-							}
+							break;
+						case "600": // 현재 접속한 유저 리스트를 받음
+//							System.out.println(cm.getData());
+							break;
+						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
+							int len = chatRoomArea.getDocument().getLength();
+							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
+							chatRoomBox = new JPanel();
+							chatRoomBox.setLayout(new BorderLayout(25,25));
+							testLabel = new JLabel();
+							testLabel.setFont(new Font("굴림체", Font.PLAIN, 14));
+							testLabel.setText(cm.getData());
+							JLabel borderLabel = new JLabel();
+							borderLabel.setBorder(null);
+							/* test code, 라벨의 위치 및 패널의 높이 변경해봄 */
+							chatRoomBox.add(new JLabel(), BorderLayout.NORTH);
+							chatRoomBox.add(new JLabel(), BorderLayout.EAST);
+							chatRoomBox.add(testLabel, BorderLayout.CENTER);
+							chatRoomBox.add(new JLabel(), BorderLayout.WEST);
+							chatRoomBox.add(new JLabel(), BorderLayout.SOUTH);
+							chatRoomBox.setBackground(Color.white);
+							chatRoomBox.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
+								@Override
+								public void mouseClicked(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public void mousePressed(MouseEvent e) { 
+									// TODO Auto-generated method stub
+									if (e.getClickCount()==2){ // 두번 클릭하면
+										testchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), testview)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
+									}
+								}
+
+								@Override
+								public void mouseReleased(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public void mouseEntered(MouseEvent e) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void mouseExited(MouseEvent e) {
+									// TODO Auto-generated method stub
+								}			
+							});
+							chatRoomArea.insertComponent(chatRoomBox);
+							chatRoomArea.replaceSelection("\n");
+							break;
+						}
 					}
 				 catch (IOException e) {
 //					AppendText("ois.readObject() error");

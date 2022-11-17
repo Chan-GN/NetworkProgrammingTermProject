@@ -45,10 +45,6 @@ public class JavaObjClientChatRoom extends JFrame {
 	private String UserName;
 	private JButton btnSend;
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
-	private Socket socket; // 연결소켓
-	private ObjectInputStream ois;
-	private ObjectOutputStream oos;
-
 	private JLabel lblUserName;
 	// private JTextArea textArea;
 	private JTextPane textArea;
@@ -57,6 +53,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	public JavaObjClientChatRoom view;
 	public JavaObjClientMain testview; // 메인 뷰를 담을 뷰
 	private String room_id;
+	private JLabel room_title;
 	//frame위치
 	public int frameX;
 	public int frameY;
@@ -124,7 +121,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		EmoLabel.add(closebtn);
 				
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 10, 352, 467);
+		scrollPane.setBounds(12, 57, 352, 420);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setOpaque(false);
 		scrollPane.setBorder(null);
@@ -169,6 +166,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChatMsg msg = new ChatMsg(UserName, "400", "Bye");
+				msg.setRoomId(room_id); 
 				SendObject(msg);
 				System.exit(0);
 			}
@@ -218,6 +216,15 @@ public class JavaObjClientChatRoom extends JFrame {
 		panel.setBackground(Color.white);
 		contentPane.add(panel);
 		
+		JPanel room_info = new JPanel();
+		room_info.setBounds(12, 5, 352, 47);
+		room_info.setOpaque(false);
+		room_title = new JLabel();
+		room_info.add(room_title);
+		room_title.setFont(new Font("굴림", Font.PLAIN, 14));
+		room_title.setText(room_id);
+		contentPane.add(room_info);
+		
 
 // 소켓 생성은 및 데이터 주고받는건 Main에서만 ( 제거 예정 )
 //		try {
@@ -266,9 +273,6 @@ public class JavaObjClientChatRoom extends JFrame {
 		filebtn.addActionListener(action4);
 		EmoticonSendAction action5 = new EmoticonSendAction();
 		emobtn.addActionListener(action5);
-
-
-		
 	}
 	
 //	// Server Message를 수신해서 화면에 표시
@@ -348,14 +352,17 @@ public class JavaObjClientChatRoom extends JFrame {
 				if(msg.equals("(하이)")) { // 임시
 					ChatMsg obcm = new ChatMsg(UserName, "300", "EMOTICON");
 					obcm.setImg(icon1);
+					obcm.setRoomId(room_id); // 룸 정보를 같이 보내줘야 함, 그래야 Main에서 룸 식별 가능, 하위 코드 및 이모티콘 패널에도 동일하게 적용
 					SendObject(obcm);
 				} else if(msg.equals("(히히)")) {
 					ChatMsg obcm = new ChatMsg(UserName, "300", "EMOTICON");
 					obcm.setImg(icon2);
+					obcm.setRoomId(room_id); // 룸 정보를 같이 보내줘야 함, 그래야 Main에서 룸 식별 가능, 하위 코드 및 이모티콘 패널에도 동일하게 적용
 					SendObject(obcm);
 				} else if(EmoLabel.isVisible()) {
 					ChatMsg obcm = new ChatMsg(UserName, "300", "Emoji");
 					obcm.setImg(panelIMG);
+					obcm.setRoomId(room_id); // ... 동일
 					SendObject(obcm);
 					SendMessage(msg);
 				}
@@ -385,6 +392,7 @@ public class JavaObjClientChatRoom extends JFrame {
 					ChatMsg obcm = new ChatMsg(UserName, "300", "IMG");
 					ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile());
 					obcm.setImg(img);
+					obcm.setRoomId(room_id);
 					SendObject(obcm);
 				}
 				
@@ -414,6 +422,7 @@ public class JavaObjClientChatRoom extends JFrame {
 						fis.read(b); // 실제 파일 내용 읽기
 						obcm.setFile(b); // 실제 파일 내용 저장
 						obcm.setFilename(fd.getFile()); // 파일 이름 저장
+						obcm.setRoomId(room_id);
 						SendObject(obcm);
 						fis.close();
 					} catch (FileNotFoundException e1) {
@@ -632,6 +641,7 @@ public class JavaObjClientChatRoom extends JFrame {
 //			}
 //		}
 		ChatMsg obcm = new ChatMsg(UserName, "200", msg);
+		obcm.setRoomId(room_id);
 		testview.SendObject(obcm); // 메인 뷰의 SendObject를 호출
 	}
 
@@ -646,14 +656,4 @@ public class JavaObjClientChatRoom extends JFrame {
 		testview.SendObject(ob); // 메인 뷰의 SendObject를 호출
 
 	}
-
-//	/* test code */
-//	public void SendRoomId(String room_id) {
-//		try {
-//			ChatMsg obcm = new ChatMsg(UserName, "999", room_id);
-//			oos.writeObject(obcm);
-//		} catch (IOException e) {
-//			AppendText("SendObject Error");
-//		}
-//	}
 }

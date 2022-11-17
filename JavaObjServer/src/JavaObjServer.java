@@ -42,6 +42,9 @@ public class JavaObjServer extends JFrame {
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
+	
+	/* test code */
+	private Vector RoomVec = new Vector(); // 채팅방을 저장할 벡터
 
 	/**
 	 * Launch the application.
@@ -243,7 +246,10 @@ public class JavaObjServer extends JFrame {
 //				byte[] bb;
 //				bb = MakePacket(msg);
 //				dos.write(bb, 0, bb.length);
-				ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
+//				ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
+				
+			
+				ChatMsg obcm = new ChatMsg("SERVER", "600", msg);
 				oos.writeObject(obcm);
 			} catch (IOException e) {
 				AppendText("dos.writeObject() error");
@@ -341,27 +347,28 @@ public class JavaObjServer extends JFrame {
 							Logout();
 							break;
 						} 
-						else if (args[1].matches("/sleep")) {
-							UserStatus = "S";
-						} else if (args[1].matches("/wakeup")) {
-							UserStatus = "O";
-						} else if (args[1].matches("/to")) { // 귓속말
-							for (int i = 0; i < user_vc.size(); i++) {
-								UserService user = (UserService) user_vc.elementAt(i);
-								if (user.UserName.matches(args[2]) && user.UserStatus.matches("O")) {
-									String msg2 = "";
-									for (int j = 3; j < args.length; j++) {// 실제 message 부분
-										msg2 += args[j];
-										if (j < args.length - 1)
-											msg2 += " ";
-									}
-									// /to 빼고.. [귓속말] [user1] Hello user2..
-									user.WritePrivate(args[0] + " " + msg2 + "\n");
-									//user.WriteOne("[귓속말] " + args[0] + " " + msg2 + "\n");
-									break;
-								}
-							}
-						} else { // 일반 채팅 메시지
+//						else if (args[1].matches("/sleep")) {
+//							UserStatus = "S";
+//						} else if (args[1].matches("/wakeup")) {
+//							UserStatus = "O";
+//						} else if (args[1].matches("/to")) { // 귓속말
+//							for (int i = 0; i < user_vc.size(); i++) {
+//								UserService user = (UserService) user_vc.elementAt(i);
+//								if (user.UserName.matches(args[2]) && user.UserStatus.matches("O")) {
+//									String msg2 = "";
+//									for (int j = 3; j < args.length; j++) {// 실제 message 부분
+//										msg2 += args[j];
+//										if (j < args.length - 1)
+//											msg2 += " ";
+//									}
+//									// /to 빼고.. [귓속말] [user1] Hello user2..
+//									user.WritePrivate(args[0] + " " + msg2 + "\n");
+//									//user.WriteOne("[귓속말] " + args[0] + " " + msg2 + "\n");
+//									break;
+//								}
+//							}
+//						}
+					else { // 일반 채팅 메시지
 							UserStatus = "O";
 							//WriteAll(msg + "\n"); // Write All
 							WriteAllObject(cm);
@@ -379,25 +386,27 @@ public class JavaObjServer extends JFrame {
 						break;
 					} 
 					else if (cm.getCode().equals("600")) { // 리스트 처리
-						WriteOne("User list\n");
-						WriteOne("Name\tStatus\n");
-						WriteOne("-----------------------------\n");
+//						WriteOne("User list\n");
+//						WriteOne("Name\tStatus\n");
+//						WriteOne("-----------------------------\n");
 						for (int i = 0; i < user_vc.size(); i++) {
 							UserService user = (UserService) user_vc.elementAt(i);
-							WriteOne(user.UserName + "\t" + user.UserStatus + "\n");
+//							WriteOne(user.UserName + "\t" + user.UserStatus + "\n");
+							WriteOne(user.UserName);
 						}
-						WriteOne("-----------------------------\n");
+//						WriteOne("-----------------------------\n");
 					} 
 //					else if (cm.getCode().equals("600")) {
 //						UserStatus = "S";
 //					} 
-					else if (cm.getCode().equals("700")) {
-						UserStatus = "O";
-					} else if (cm.getCode().equals("500")) {
+//					else if (cm.getCode().equals("700")) {
+//						UserStatus = "O";
+//					} 
+					else if (cm.getCode().equals("500")) {
 						WriteAllObject(cm);
 					} else if (cm.getCode().equals("999")) { // 채팅방 ID를 받으면
-						WriteAllObject(cm); // 방이 하나만 있으니 모두에게 방송
-						System.out.println(cm.getData()); // 채팅방 ID 콘솔에 찍어보고
+						WriteAllObject(cm); // 방은 여러개지만 모두에게 방송, 추후 변경 예정
+//						System.out.println(cm.getData()); // 채팅방 ID 콘솔에 찍어보고
 						room_ids.add(cm.getData()); // 채팅방 ID 리스트에 채팅방 ID 추가 
 					}
 				} catch (IOException e) {

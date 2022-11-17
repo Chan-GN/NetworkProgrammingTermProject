@@ -125,11 +125,13 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji1;
+					cm.setRoomId(mainview.getRoomId());
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji1;
+					cm.setRoomId(mainview.getRoomId());
 					mainview.SendObject(cm);
 				}
 		    }  
@@ -142,11 +144,14 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji2;
+					cm.setRoomId(mainview.getRoomId());
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji2;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -159,11 +164,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji3;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji3;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -176,11 +185,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji4;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji4;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -193,11 +206,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji5;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji5;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -210,11 +227,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji6;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji6;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -227,11 +248,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji7;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji7;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -244,11 +269,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji8;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji8;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -261,11 +290,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji9;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji9;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  
@@ -278,11 +311,15 @@ public class EmojiView extends JFrame {
 				if(e.getClickCount()==2) {
 					ChatMsg cm = new ChatMsg(UserName, "301", "image");
 					cm.img=emoji10;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);
 				}
 				else {
 					ChatMsg cm = new ChatMsg(UserName, "302", "panelOn");
 					cm.img=emoji10;
+					cm.setRoomId(mainview.getRoomId());
+
 					mainview.SendObject(cm);		
 				}
 		    }  

@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 class ChatMsg implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500:File, 600:유저 리스트 999:테스트
+	private String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500:File, 600:유저 리스트 999:채팅방
 	private String data;
 	public ImageIcon img;
 	public ImageIcon emoji;
