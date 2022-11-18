@@ -187,14 +187,14 @@ public class JavaObjServer extends JFrame {
 			//WriteOne("Welcome to Java chat server\n");
 			//WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
 			String msg = user_list.toString();
-			WriteAll(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
+			WriteAllList(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
 		}
 
 		public void Logout() {
-			String msg = "[" + UserName + "]님이 퇴장 하였습니다.\n";
-			UserVec.removeElement(this); // Logout한 현재 객체를 벡터에서 지운다
-			WriteAll(msg); // 나를 제외한 다른 User들에게 전송
-			AppendText("사용자 " + "[" + UserName + "] 퇴장. 현재 참가자 수 " + UserVec.size());
+			//String msg = "[" + UserName + "]님이 퇴장 하였습니다.\n";
+			//UserVec.removeElement(this); // Logout한 현재 객체를 벡터에서 지운다
+			//WriteAll(msg); // 나를 제외한 다른 User들에게 전송
+			//AppendText("사용자 " + "[" + UserName + "] 퇴장. 현재 참가자 수 " + UserVec.size());
 		}
 
 		// 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -203,6 +203,14 @@ public class JavaObjServer extends JFrame {
 				UserService user = (UserService) user_vc.elementAt(i);
 				if (user.UserStatus == "O")
 					user.WriteOne(str);
+			}
+		}
+		
+		public void WriteAllList(String str) {
+			for (int i = 0; i < user_vc.size(); i++) {
+				UserService user = (UserService) user_vc.elementAt(i);
+				if (user.UserStatus == "O")
+					user.WriteOneList(str);
 			}
 		}
 		// 모든 User들에게 Object를 방송. 채팅 message와 image object를 보낼 수 있다
@@ -267,6 +275,15 @@ public class JavaObjServer extends JFrame {
 					e1.printStackTrace();
 				}
 				Logout(); // 에러가난 현재 객체를 벡터에서 지운다
+			}
+		}
+		
+		public void WriteOneList(String msg) {
+			try {
+				ChatMsg obcm = new ChatMsg("SERVER", "777", msg);
+				oos.writeObject(obcm);
+			} catch (IOException e) {
+				System.out.println("ERRor!@@@"+this.UserName);
 			}
 		}
 

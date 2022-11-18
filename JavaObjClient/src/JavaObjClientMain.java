@@ -41,6 +41,7 @@ public class JavaObjClientMain extends JFrame {
 	public JavaObjClientMain testview; // view 상속을 위해 view 선언
 	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
 	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
+	private JTextPane friendListArea;
 	private String test_roomid = ""; // 고유한 룸 아이디
 	
 	public String[] user_list;
@@ -50,7 +51,11 @@ public class JavaObjClientMain extends JFrame {
 	
 	public JButton btnfriend;
 	public JButton btnchat;
-	
+	//test//
+	public ImageIcon profileBasic = new ImageIcon("src/profileIMG_basic.png");
+	public String[] usertemp;
+	public JTextPane myprofile;
+	public int count=0;
 	/**
 	 * Create the frame.
 	 */
@@ -78,14 +83,49 @@ public class JavaObjClientMain extends JFrame {
 		chatRoomArea.setFont(new Font("굴림체", Font.PLAIN, 14));
 		chatRoomArea.setOpaque(false);
 		chat_scrollPane.setViewportView(chatRoomArea); // scrollpane에 chatRoomArea 추가
-
+		
+		JScrollPane myprofileArea = new JScrollPane();
+		myprofileArea.setBounds(64, 65, 320, 94);
+		myprofileArea.getViewport().setOpaque(false);
+		myprofileArea.setOpaque(false);
+		myprofileArea.setBorder(null);		
+		contentPane.add(myprofileArea);
+		
+		myprofile = new JTextPane();
+		myprofile.setEditable(true);
+		myprofile.setBackground(Color.white);
+		myprofile.setBounds(64, 156, 320, -90);
+		myprofile.setFont(new Font("굴림체", Font.PLAIN, 14));
+		myprofile.setOpaque(false);
+		myprofile.setLayout(null);
+		myprofileArea.setViewportView(myprofile);
+		
+		myprofileArea.setVisible(false);
+		
+		JLabel myprofilename = new JLabel(username);
+		myprofilename.setBounds(120, -70, 65, 18);
+		myprofilename.setFont(new Font("굴림체", Font.PLAIN, 14));
+		myprofile.add(myprofilename);
+		
+		JButton myprofileBtn = new JButton(profileBasic);
+		myprofileBtn.setBounds(30, -50, 65, 18);
+		myprofileBtn.setBorderPainted(false);
+		myprofileBtn.setContentAreaFilled(false);
+		myprofileBtn.setFocusPainted(false);
+		myprofile.add(myprofileBtn);
 		
 		JScrollPane friend_scrollPane = new JScrollPane();
-		friend_scrollPane.setBounds(64, 65, 320, 528);
+		friend_scrollPane.setBounds(64, 143, 320, 450);
 		friend_scrollPane.getViewport().setOpaque(false);
 		friend_scrollPane.setOpaque(false);
 		friend_scrollPane.setBorder(null);		
 		contentPane.add(friend_scrollPane);
+
+		friendListArea = new JTextPane();
+		friendListArea.setEditable(true);
+		friendListArea.setFont(new Font("굴림체", Font.PLAIN, 14));
+		friendListArea.setOpaque(false);
+		friend_scrollPane.setViewportView(friendListArea); // scrollpane에 chatRoomArea 추가
 				
 		JLabel lblNewLabel_1 = new JLabel("친구"); // 테스트 라벨
 		friend_scrollPane.setColumnHeaderView(lblNewLabel_1);
@@ -115,6 +155,7 @@ public class JavaObjClientMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				chat_scrollPane.setVisible(false);
 				friend_scrollPane.setVisible(true);
+				myprofileArea.setVisible(true);
 				chatLabel.setText("친구"); // 친구로 라벨 변경
 				btnfriend.setIcon(friend_icon_c);
 				btnchat.setIcon(chat_icon_n);
@@ -169,6 +210,7 @@ public class JavaObjClientMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				chat_scrollPane.setVisible(true);
 				friend_scrollPane.setVisible(false);
+				myprofileArea.setVisible(false);
 				chatLabel.setText("채팅"); // 채팅으로 라벨 변경
 				btnfriend.setIcon(friend_icon_n);
 				btnchat.setIcon(chat_icon_c);
@@ -334,8 +376,25 @@ public class JavaObjClientMain extends JFrame {
 //							System.out.println(cm.getData());
 							break;
 						case "777":
-							String a = cm.getData().substring(1, cm.getData().length()-1).replaceAll(" ","");
-							user_list=a.split(",");
+							if(count==0) {
+							FriendListPanel my_profile = new FriendListPanel(profileBasic,UserName);
+							myprofile.insertComponent(my_profile);
+							count++;
+							}
+
+							String a = cm.getData().substring(1,cm.getData().length()-1).replaceAll(" ",""); user_list=a.split(",");
+							if(usertemp==null) {
+								for(int i=0;i<user_list.length;i++) {
+									if(user_list[i].equals(UserName))
+										continue;
+									FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[i]);
+									friendListArea.insertComponent(friend_list); usertemp=user_list;
+									}
+								} 
+							else {
+							FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[user_list.length-1]);
+							friendListArea.insertComponent(friend_list);
+							}		 
 							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
