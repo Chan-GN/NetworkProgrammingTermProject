@@ -154,7 +154,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUserName.setBounds(12, 539, 62, 40);
 		// contentPane.add(lblUserName);
-		setVisible(true);
+		
 
 		// AppendText("User " + username + " connecting " + ip_addr + " " + port_no);
 		UserName = username;
@@ -225,41 +225,8 @@ public class JavaObjClientChatRoom extends JFrame {
 		room_title.setText(room_id);
 		contentPane.add(room_info);
 		
-
-// 소켓 생성은 및 데이터 주고받는건 Main에서만 ( 제거 예정 )
-//		try {
-//			socket = new Socket(ip_addr, Integer.parseInt(port_no));
-//
-//			oos = new ObjectOutputStream(socket.getOutputStream());
-//			oos.flush();
-//			ois = new ObjectInputStream(socket.getInputStream());
-//
-//			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
-//			SendObject(obcm);
-//			
-//			ListenNetwork net = new ListenNetwork();
-//			net.start();
-//			TextSendAction action = new TextSendAction();
-//			btnSend.addActionListener(action);
-//			txtInput.addActionListener(action);
-//			txtInput.requestFocus();
-//			ImageSendAction action2 = new ImageSendAction();
-//			imgBtn.addActionListener(action2);
-//			ListSendAction action3 = new ListSendAction(); 
-//			listbtn.addActionListener(action3);
-//			FileSendAction action4 = new FileSendAction();
-//			filebtn.addActionListener(action4);
-//			EmoticonSendAction action5 = new EmoticonSendAction();
-//			emobtn.addActionListener(action5);
-//			
-//
-//
-//		} catch (NumberFormatException | IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			AppendText("connect error");
-//		}
-
+		setVisible(true);
+		
 		/* test code */ // 액션 리스너만 생성
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);

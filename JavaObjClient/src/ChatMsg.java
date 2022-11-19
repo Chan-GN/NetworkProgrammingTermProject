@@ -21,6 +21,9 @@ class ChatMsg implements Serializable {
 	public String room_id;
 	
 	public String user_list;
+	public String con_user_list; // 현재 접속 유저
+	public String selected_userlist; // 선택된 유저
+
 	
 	public ChatMsg(String id, String code, String msg) {
 		this.id = id;

@@ -41,6 +41,7 @@ public class JavaObjClientMain extends JFrame {
 	public JavaObjClientMain testview; // view 상속을 위해 view 선언
 	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
 	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
+	private JTextPane friendListArea;
 	private String test_roomid = ""; // 고유한 룸 아이디
 	
 	public String[] user_list;
@@ -50,7 +51,11 @@ public class JavaObjClientMain extends JFrame {
 	
 	public JButton btnfriend;
 	public JButton btnchat;
-	
+	//test//
+	public ImageIcon profileBasic = new ImageIcon("src/profileIMG_basic.png");
+	public String[] usertemp;
+	public JTextPane myprofile;
+	public int count=0;
 	/**
 	 * Create the frame.
 	 */
@@ -75,18 +80,53 @@ public class JavaObjClientMain extends JFrame {
 		/* test code */
 		chatRoomArea = new JTextPane();
 		chatRoomArea.setEditable(true);
-		chatRoomArea.setFont(new Font("굴림체", Font.PLAIN, 14));
+		chatRoomArea.setFont(new Font("굴림체", Font.PLAIN, 2));
 		chatRoomArea.setOpaque(false);
 		chat_scrollPane.setViewportView(chatRoomArea); // scrollpane에 chatRoomArea 추가
 
-		
+		JScrollPane myprofileArea = new JScrollPane();
+		myprofileArea.setBounds(64, 65, 320, 94);
+		myprofileArea.getViewport().setOpaque(false);
+		myprofileArea.setOpaque(false);
+		myprofileArea.setBorder(null);		
+		contentPane.add(myprofileArea);
+
+		myprofile = new JTextPane();
+		myprofile.setEditable(true);
+		myprofile.setBackground(Color.white);
+		myprofile.setBounds(64, 156, 320, -90);
+		myprofile.setFont(new Font("굴림체", Font.PLAIN, 14));
+		myprofile.setOpaque(false);
+		myprofile.setLayout(null);
+		myprofileArea.setViewportView(myprofile);
+
+		myprofileArea.setVisible(false);
+
+		JLabel myprofilename = new JLabel(username);
+		myprofilename.setBounds(120, -70, 65, 18);
+		myprofilename.setFont(new Font("굴림체", Font.PLAIN, 14));
+		myprofile.add(myprofilename);
+
+		JButton myprofileBtn = new JButton(profileBasic);
+		myprofileBtn.setBounds(30, -50, 65, 18);
+		myprofileBtn.setBorderPainted(false);
+		myprofileBtn.setContentAreaFilled(false);
+		myprofileBtn.setFocusPainted(false);
+		myprofile.add(myprofileBtn);
+
 		JScrollPane friend_scrollPane = new JScrollPane();
-		friend_scrollPane.setBounds(64, 65, 320, 528);
+		friend_scrollPane.setBounds(64, 143, 320, 450);
 		friend_scrollPane.getViewport().setOpaque(false);
 		friend_scrollPane.setOpaque(false);
 		friend_scrollPane.setBorder(null);		
 		contentPane.add(friend_scrollPane);
 				
+		friendListArea = new JTextPane();
+		friendListArea.setEditable(true);
+		friendListArea.setFont(new Font("굴림체", Font.PLAIN, 14));
+		friendListArea.setOpaque(false);
+		friend_scrollPane.setViewportView(friendListArea); // scrollpane에 chatRoomArea 추가
+
 		JLabel lblNewLabel_1 = new JLabel("친구"); // 테스트 라벨
 		friend_scrollPane.setColumnHeaderView(lblNewLabel_1);
 		friend_scrollPane.setVisible(false);
@@ -115,6 +155,7 @@ public class JavaObjClientMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				chat_scrollPane.setVisible(false);
 				friend_scrollPane.setVisible(true);
+				myprofileArea.setVisible(true);
 				chatLabel.setText("친구"); // 친구로 라벨 변경
 				btnfriend.setIcon(friend_icon_c);
 				btnchat.setIcon(chat_icon_n);
@@ -169,6 +210,7 @@ public class JavaObjClientMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				chat_scrollPane.setVisible(true);
 				friend_scrollPane.setVisible(false);
+				myprofileArea.setVisible(false);
 				chatLabel.setText("채팅"); // 채팅으로 라벨 변경
 				btnfriend.setIcon(friend_icon_n);
 				btnchat.setIcon(chat_icon_c);
@@ -221,15 +263,18 @@ public class JavaObjClientMain extends JFrame {
 		btnchatplus.addActionListener(new ActionListener() { // 채팅방 추가 버튼 클릭 리스너
 			@Override
 			public void actionPerformed(ActionEvent e) { // 버튼이 눌리면
-				// TODO Auto-generated method stub
-				Date now = new Date(); // 현재 날짜 및 시간을 계산해서
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
-				test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
-				SendRoomId(test_roomid); // 서버로 채팅방 이름 보냄
+				ChatMsg obcm = new ChatMsg(UserName, "601", "LIST");
+				SendObject(obcm);
+				
+				// 추후 사용 예정 로직
+//				Date now = new Date(); // 현재 날짜 및 시간을 계산해서
+//				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
+//				test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
+//				SendRoomId(test_roomid); // 서버로 채팅방 이름 보냄
 //				testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달, 추후 채팅방 유저 리스트 추가 요망
-				for(JavaObjClientChatRoom testchatview : testchatviews) {
-//					System.out.println(testchatview.getRoomId());
-				}
+//				for(JavaObjClientChatRoom testchatview : testchatviews) {
+////					System.out.println(testchatview.getRoomId());
+//				}
 			}
 		});
 		contentPane.add(btnchatplus);
@@ -330,18 +375,36 @@ public class JavaObjClientMain extends JFrame {
 								}
 							}
 							break;
-						case "600": // 현재 접속한 유저 리스트를 받음
-//							System.out.println(cm.getData());
+						case "601": // 현재 접속한 유저 리스트를 받음
+//							System.out.println(UserName + cm.con_user_list);
+							new ChatRoomPlus(UserName, cm.con_user_list, testview);
 							break;
 						case "777":
-							String a = cm.getData().substring(1, cm.getData().length()-1).replaceAll(" ","");
-							user_list=a.split(",");
+							if(count==0) {
+								FriendListPanel my_profile = new FriendListPanel(profileBasic,UserName);
+								myprofile.insertComponent(my_profile);
+								count++;
+								}
+
+								String a = cm.getData().substring(1,cm.getData().length()-1).replaceAll(" ",""); user_list=a.split(",");
+								if(usertemp==null) {
+									for(int i=0;i<user_list.length;i++) {
+										if(user_list[i].equals(UserName))
+											continue;
+										FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[i]);
+										friendListArea.insertComponent(friend_list); usertemp=user_list;
+										}
+									} 
+								else {
+								FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[user_list.length-1]);
+								friendListArea.insertComponent(friend_list);
+								}
 							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
-							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.getData());
-							System.out.println(cm.getData());
+							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.selected_userlist);
+//							System.out.println(cm.getData());
 							chatroombox_test.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
 								@Override
 								public void mouseClicked(MouseEvent e) {
@@ -375,6 +438,7 @@ public class JavaObjClientMain extends JFrame {
 							});
 
 							chatRoomArea.insertComponent(chatroombox_test);
+							chatRoomArea.replaceSelection("\n");
 							String username = cm.getId();
 							if(UserName.equals(username)) {
 									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview));
@@ -407,10 +471,14 @@ public class JavaObjClientMain extends JFrame {
 	}
 	
 	/* test code */
-	public void SendRoomId(String room_id) { // 버튼 클릭 시 
+	public void SendRoomId(String userlist) { // 버튼 클릭 시 
 		try {
-			ChatMsg obcm = new ChatMsg(UserName, "999", room_id);
-			oos.writeObject(obcm);
+			Date now = new Date(); // 현재 날짜 및 시간을 계산해서
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
+			test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
+			ChatMsg obcm = new ChatMsg(UserName, "999", test_roomid);
+			obcm.selected_userlist = userlist;
+			oos.writeObject(obcm); // 여기서부터 하면됨 서버에서 수신하는지?
 		} catch (IOException e) {
 //			AppendText("SendObject Error");
 		}
