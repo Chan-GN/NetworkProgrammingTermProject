@@ -113,13 +113,30 @@ public class JavaObjClientMain extends JFrame {
 		myprofileBtn.setContentAreaFilled(false);
 		myprofileBtn.setFocusPainted(false);
 		myprofile.add(myprofileBtn);
-
+		
+		myprofile = new JTextPane();
+		myprofile.setEditable(true);
+		myprofile.setBackground(Color.white);
+		myprofile.setBounds(64, 156, 320, -90);
+		myprofile.setFont(new Font("±¼¸²Ã¼", Font.PLAIN, 14));
+		myprofile.setOpaque(false);
+		myprofile.setLayout(null);
+		myprofileArea.setViewportView(myprofile);
+		
+		myprofileArea.setVisible(false);
+		
 		JScrollPane friend_scrollPane = new JScrollPane();
 		friend_scrollPane.setBounds(64, 143, 320, 450);
 		friend_scrollPane.getViewport().setOpaque(false);
 		friend_scrollPane.setOpaque(false);
 		friend_scrollPane.setBorder(null);		
 		contentPane.add(friend_scrollPane);
+
+		friendListArea = new JTextPane();
+		friendListArea.setEditable(true);
+		friendListArea.setFont(new Font("±¼¸²Ã¼", Font.PLAIN, 14));
+		friendListArea.setOpaque(false);
+		friend_scrollPane.setViewportView(friendListArea); // scrollpane¿¡ chatRoomArea Ãß°¡
 				
 		friendListArea = new JTextPane();
 		friendListArea.setEditable(true);

@@ -221,7 +221,6 @@ public class JavaObjServer extends JFrame {
 					user.WriteOneList(str);
 			}
 		}
-		
 		// 모든 User들에게 Object를 방송. 채팅 message와 image object를 보낼 수 있다
 		public void WriteAllObject(Object ob) {
 			for (int i = 0; i < user_vc.size(); i++) {
@@ -299,7 +298,7 @@ public class JavaObjServer extends JFrame {
 				Logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
-
+		
 		public void WriteOneList(String msg) {
 			try {
 				ChatMsg obcm = new ChatMsg("SERVER", "777", msg);
