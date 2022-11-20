@@ -45,6 +45,7 @@ public class JavaObjClientMain extends JFrame {
 	private JTextPane friendListArea;
 	private String test_roomid = ""; // 고유한 룸 아이디
 	private List<FriendListPanel> friend_lists = new ArrayList<FriendListPanel>(); // 친구 리스트 패널을 담을 리스트
+	private List<ChatRoomBoxTest> chatRoomlists = new ArrayList<ChatRoomBoxTest>(); // 채팅방 리스트를 담을 리스트
 	
 	public String[] user_list;
 	
@@ -429,13 +430,62 @@ public class JavaObjClientMain extends JFrame {
 //									System.out.println(UserName + " 님 방 " + cm.getId());
 								}
 							}
+							for(ChatRoomBoxTest chatRoomlist: chatRoomlists) {
+//								System.out.println(UserName + " " + chatRoomlist.getChatroombox_title());
+								String[] ul = chatRoomlist.getChatroombox_title().trim().split(", ");
+								if(ul.length == 1) {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											chatRoomlist.usersPfImgOne.setIcon(cm.img);
+										}
+									}									
+								} else if(ul.length == 2) {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											if(cm.getId().equals(chatRoomlist.usersPfImgTwo_1.getText()))
+												chatRoomlist.usersPfImgTwo_1.setIcon(cm.img);
+											else
+												chatRoomlist.usersPfImgTwo_2.setIcon(cm.img);
+										}
+									}									
+								} else if(ul.length == 3) {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											if(cm.getId().equals(chatRoomlist.usersPfImgTh_1.getText()))
+												chatRoomlist.usersPfImgTh_1.setIcon(cm.img);
+											else if(cm.getId().equals(chatRoomlist.usersPfImgTh_2.getText()))
+												chatRoomlist.usersPfImgTh_2.setIcon(cm.img);
+											else
+												chatRoomlist.usersPfImgTh_3.setIcon(cm.img);
+										}
+									}									
+								} else {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											if(cm.getId().equals(chatRoomlist.usersPfImgF_1.getText()))
+												chatRoomlist.usersPfImgF_1.setIcon(cm.img);
+											else if(cm.getId().equals(chatRoomlist.usersPfImgF_2.getText()))
+												chatRoomlist.usersPfImgF_2.setIcon(cm.img);
+											else if(cm.getId().equals(chatRoomlist.usersPfImgF_3.getText()))
+												chatRoomlist.usersPfImgF_3.setIcon(cm.img);
+											else
+												chatRoomlist.usersPfImgF_4.setIcon(cm.img);
+										}
+									}									
+								}
+							}
 							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
 							String room_title = cm.selected_userlist.trim();
 							room_title = room_title.replace(" ", ", ");
-							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(room_title);
+							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(room_title, profileBasic);
+							chatRoomlists.add(chatroombox_test);
 //							System.out.println(cm.getData());
 							chatroombox_test.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
 								@Override

@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
@@ -73,6 +74,9 @@ public class FriendListPanel extends JPanel {
 		profileBtn.setBorderPainted(false);
 		profileBtn.setContentAreaFilled(false);
 		profileBtn.setFocusPainted(false);
+		profileBtn.getCursor();
+		profileBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
 		add(profileBtn);
 
 		profileBtn.addMouseListener(new MouseListener() {			
