@@ -200,7 +200,7 @@ public class JavaObjServer extends JFrame {
 
 		public void Logout() {
 			//String msg = "[" + UserName + "]님이 퇴장 하였습니다.\n";
-			//UserVec.removeElement(this); // Logout한 현재 객체를 벡터에서 지운다
+			UserVec.removeElement(this); // Logout한 현재 객체를 벡터에서 지운다
 			//WriteAll(msg); // 나를 제외한 다른 User들에게 전송
 			//AppendText("사용자 " + "[" + UserName + "] 퇴장. 현재 참가자 수 " + UserVec.size());
 		}
@@ -397,7 +397,7 @@ public class JavaObjServer extends JFrame {
 							for (int k = 0; k < room_vc.size(); k++) {
 								RoomService room = (RoomService) room_vc.elementAt(k);
 								if (room.RoomID.equals(cm.room_id)) {
-									System.out.println(room.RoomUserlist);
+//									System.out.println(room.RoomUserlist);
 									String selectedOne[] = room.RoomUserlist.split(" ");
 									for (int i = 0; i < user_vc.size(); i++) {
 										UserService user = (UserService) user_vc.elementAt(i);
@@ -447,6 +447,8 @@ public class JavaObjServer extends JFrame {
 						System.out.print(user_list);
 					} 
 					else if (cm.getCode().equals("500")) {
+						WriteAllObject(cm);
+					} else if (cm.getCode().equals("888")) { // 프로필 사진 변경 요청, 객체 그대로 전달해준다
 						WriteAllObject(cm);
 					} else if (cm.getCode().equals("999")) { // 채팅방 ID를 받으면
 //						WriteAllObject(cm); // 방은 여러개지만 모두에게 방송, 추후 변경 예정

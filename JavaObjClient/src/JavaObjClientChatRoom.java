@@ -69,7 +69,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain testview) { // username을 맨 앞으로 해서 방 이름 생성하면 고유한 ID 생성됨 // UserList도 인자에 추가
+	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain testview, String userlist) { // username을 맨 앞으로 해서 방 이름 생성하면 고유한 ID 생성됨 // UserList도 인자에 추가
 		view = this;
 		this.room_id = room_id; // 채팅방 이름
 		this.testview = testview; // 메인뷰
@@ -219,10 +219,14 @@ public class JavaObjClientChatRoom extends JFrame {
 		JPanel room_info = new JPanel();
 		room_info.setBounds(12, 5, 352, 47);
 		room_info.setOpaque(false);
+		room_info.setLayout(null);
 		room_title = new JLabel();
+		room_title.setBounds(50, 19, 228, 18);
 		room_info.add(room_title);
-		room_title.setFont(new Font("굴림", Font.PLAIN, 14));
-		room_title.setText(room_id);
+		room_title.setFont(new Font("나눔고딕", Font.PLAIN, 14));
+		String title_show= userlist.trim();
+		title_show = title_show.replace(" ", ", ");
+		room_title.setText(title_show);
 		contentPane.add(room_info);
 		
 		setVisible(true);

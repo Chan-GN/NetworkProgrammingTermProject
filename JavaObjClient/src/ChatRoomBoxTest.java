@@ -22,7 +22,7 @@ public class ChatRoomBoxTest extends JPanel {
 		setPreferredSize(new Dimension(320,70)); // 높이 설정만 가능한듯 ?
 		JLabel chatroombox_title = new JLabel(title);
 		chatroombox_title.setBounds(69, 10, 169, 30);
-		chatroombox_title.setFont(new Font("굴림체", Font.PLAIN, 14));
+		chatroombox_title.setFont(new Font("나눔고딕", Font.BOLD, 12));
 		add(chatroombox_title);
 		addMouseListener(new MouseListener() {			
 			@Override

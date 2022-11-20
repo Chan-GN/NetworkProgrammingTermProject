@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.BorderFactory;
@@ -34,7 +35,7 @@ public class JavaObjClientMain extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private String UserName;
+	public String UserName;
 	
 	/* test code */
 	private Socket socket; // 연결소켓
@@ -43,6 +44,7 @@ public class JavaObjClientMain extends JFrame {
 	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
 	private JTextPane friendListArea;
 	private String test_roomid = ""; // 고유한 룸 아이디
+	private List<FriendListPanel> friend_lists = new ArrayList<FriendListPanel>(); // 친구 리스트 패널을 담을 리스트
 	
 	public String[] user_list;
 	
@@ -398,7 +400,8 @@ public class JavaObjClientMain extends JFrame {
 							break;
 						case "777":
 							if(count==0) {
-								FriendListPanel my_profile = new FriendListPanel(profileBasic,UserName);
+								FriendListPanel my_profile = new FriendListPanel(profileBasic,UserName,testview);
+								friend_lists.add(my_profile); // 리스트에 추가
 								myprofile.insertComponent(my_profile);
 								count++;
 								}
@@ -408,19 +411,31 @@ public class JavaObjClientMain extends JFrame {
 									for(int i=0;i<user_list.length;i++) {
 										if(user_list[i].equals(UserName))
 											continue;
-										FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[i]);
+										FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[i],testview);
+										friend_lists.add(friend_list); // 리스트에 추가
 										friendListArea.insertComponent(friend_list); usertemp=user_list;
 										}
 									} 
 								else {
-								FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[user_list.length-1]);
+								FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[user_list.length-1],testview);
+								friend_lists.add(friend_list); // 리스트에 추가
 								friendListArea.insertComponent(friend_list);
 								}
+							break;
+						case "888": // 888을 수신받으면
+							for(FriendListPanel fl : friend_lists) { // 리스트 루프를 돌며
+								if(fl.getFriendList_username().equals(cm.getId())) { // 패널의 이름과 이름이 같은 친구를 찾아서 ( 즉 변경 요청 본인 )
+									fl.profileBtn.setIcon(cm.img); // 이미지 설정
+//									System.out.println(UserName + " 님 방 " + cm.getId());
+								}
+							}
 							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
-							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(cm.selected_userlist);
+							String room_title = cm.selected_userlist.trim();
+							room_title = room_title.replace(" ", ", ");
+							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(room_title);
 //							System.out.println(cm.getData());
 							chatroombox_test.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
 								@Override
@@ -433,7 +448,7 @@ public class JavaObjClientMain extends JFrame {
 								public void mousePressed(MouseEvent e) { 
 									// TODO Auto-generated method stub
 									if (e.getClickCount()==2){ // 두번 클릭하면
-										testchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), testview)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
+										testchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), testview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
 									}
 								}
 
@@ -458,7 +473,7 @@ public class JavaObjClientMain extends JFrame {
 							chatRoomArea.replaceSelection("\n");
 							String username = cm.getId();
 							if(UserName.equals(username)) {
-									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview));
+									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview, cm.selected_userlist));
 							}
 							break;
 						}
