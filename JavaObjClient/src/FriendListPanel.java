@@ -28,7 +28,7 @@ public class FriendListPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public FriendListPanel(ImageIcon profile, String username, JavaObjClientMain testview) { // 뷰를 인자로 얻어옴
+	public FriendListPanel(ImageIcon profile, String username, JavaObjClientMain testview, String userstatus) { // 뷰를 인자로 얻어옴
 		mainview = testview;
 		setLayout(null); // absolute layout
 		setBackground(Color.white);
@@ -65,12 +65,12 @@ public class FriendListPanel extends JPanel {
 			}
 		});
 		FriendList_username = new JLabel(username);
-		FriendList_username.setBounds(111, 14, 169, 30);
+		FriendList_username.setBounds(81, 14, 114, 30);
 		FriendList_username.setFont(new Font("굴림체", Font.PLAIN, 14));
 		add(FriendList_username);
 
 		profileBtn = new JButton(profile);
-		profileBtn.setBounds(12, 14, 77, 46);
+		profileBtn.setBounds(12, 14, 46, 46);
 		profileBtn.setBorderPainted(false);
 		profileBtn.setContentAreaFilled(false);
 		profileBtn.setFocusPainted(false);
@@ -78,6 +78,15 @@ public class FriendListPanel extends JPanel {
 		profileBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		add(profileBtn);
+		
+		JLabel status = new JLabel();
+		if(userstatus.equals("ON")) {
+			status.setText("접속중");
+		} else {
+			status.setText("비접속");
+		}
+		status.setBounds(207, 22, 50, 15);
+		add(status);
 
 		profileBtn.addMouseListener(new MouseListener() {			
 			@Override

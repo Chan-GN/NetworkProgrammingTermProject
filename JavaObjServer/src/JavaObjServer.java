@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
@@ -46,6 +47,7 @@ public class JavaObjServer extends JFrame {
 	
 	/* test code */
 	private Vector RoomVec = new Vector(); // 채팅방을 저장할 벡터
+	private Vector LoggedUserVec = new Vector();
 
 	/**
 	 * Launch the application.
@@ -155,6 +157,12 @@ public class JavaObjServer extends JFrame {
 		public String RoomUserlist = "";
 	}
 	
+	class UserLogService extends Thread { // 유저 로그 서비스
+		public String logusername = "";
+		public String loguserstatus = "";
+		public ImageIcon loguserprofileimg;
+	}
+	
 	class UserService extends Thread {
 		private InputStream is;
 		private OutputStream os;
@@ -167,6 +175,7 @@ public class JavaObjServer extends JFrame {
 		private Socket client_socket;
 		private Vector user_vc;
 		private Vector room_vc;
+		private Vector loguser_vc;
 		public String UserName = "";
 		public String UserStatus;
 
@@ -181,6 +190,8 @@ public class JavaObjServer extends JFrame {
 			this.client_socket = client_socket;
 			this.user_vc = UserVec;
 			this.room_vc = RoomVec;
+			this.loguser_vc = LoggedUserVec;
+			
 			try {
 				oos = new ObjectOutputStream(client_socket.getOutputStream());
 				oos.flush();
@@ -194,8 +205,32 @@ public class JavaObjServer extends JFrame {
 			//AppendText("새로운 참가자 " + UserName + " 입장.");
 			//WriteOne("Welcome to Java chat server\n");
 			//WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
-			String msg = user_list.toString();
-			WriteAllList(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
+//			String msg = user_list.toString();
+			String msg =""; // 유저 이름, 유저 상태를 담을 msg
+			for(int i=0; i < loguser_vc.size(); i++) { // 유저 벡터 루프 돌면서
+				UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+				msg += loguser.logusername+" "+loguser.loguserstatus + ","; // 유저 이름, 상태를 담아
+//				System.out.println("Server" + loguser.logusername);
+			}
+			// msg는 u1 ON,u2 OFF,u3 ON 과 같은 형식으로 저장됨
+			WriteAllList(msg); // 모두에게 방송
+//			WriteOthers(UserName);
+		}
+		
+		public void LoginSame() {
+			//AppendText("새로운 참가자 " + UserName + " 입장.");
+			//WriteOne("Welcome to Java chat server\n");
+			//WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
+//			String msg = user_list.toString();
+//			WriteOneList(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
+			String msg ="";
+			for(int i=0; i < loguser_vc.size(); i++) {
+				UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+				msg += loguser.logusername+" "+loguser.loguserstatus + ",";
+				System.out.println("Server" + loguser.logusername);
+
+			}
+			WriteOneList(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
 		}
 
 		public void Logout() {
@@ -234,11 +269,17 @@ public class JavaObjServer extends JFrame {
 		public void WriteOthers(String str) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user != this && user.UserStatus == "O")
-					user.WriteOne(str);
+				if (user != this && user.UserStatus == "O") {
+					ChatMsg obcm = new ChatMsg("SERVER", "777", str);
+					try {
+						oos.writeObject(obcm);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		}
-		
 		public void WriteOneTest(Object obcm) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
@@ -374,8 +415,20 @@ public class JavaObjServer extends JFrame {
 					if (cm.getCode().equals("100")) {
 						UserName = cm.getId();
 						UserStatus = "O"; // Online 상태
-						user_list.add(UserName);
-						Login();
+						for(int i=0; i < loguser_vc.size(); i++) {
+							UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+							if(cm.getId().equals(loguser.logusername)){ // 해당 유저
+								loguser.loguserstatus = "ON"; // 유저의 상태를 ON으로
+							}
+						}
+						if(!user_list.contains(UserName)) { // 로그에 저장되어 있지 않은 이름이라면
+							user_list.add(UserName); // 유저 리스트에 저장
+							UserLogService newuser = new UserLogService();
+							newuser.logusername = UserName; // 벡터에 이름 저장
+							newuser.loguserstatus = "ON"; // 초기 상태 ON으로 설정
+							LoggedUserVec.add(newuser); // 벡터에 저장
+						}
+						Login(); // 로그인
 					} else if (cm.getCode().matches("200")) {
 						msg = String.format("[%s] %s", cm.getId(), cm.getData());
 						AppendText(msg); // server 화면에 출력
@@ -420,19 +473,21 @@ public class JavaObjServer extends JFrame {
 					} else if (cm.getCode().matches("302")) {
 						WriteOneObject(cm);
 					} else if (cm.getCode().matches("400")) { // logout message 처리
+						for(int i=0; i < loguser_vc.size(); i++) {
+							UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+							if(cm.getId().equals(loguser.logusername)){
+								loguser.loguserstatus = "OFF";
+							}
+						}
+						Login();
 						Logout();
 						break;
 					} 
 					else if (cm.getCode().equals("600")) { // 리스트 처리
-//						WriteOne("User list\n");
-//						WriteOne("Name\tStatus\n");
-//						WriteOne("-----------------------------\n");
 						for (int i = 0; i < user_vc.size(); i++) {
 							UserService user = (UserService) user_vc.elementAt(i);
-//							WriteOne(user.UserName + "\t" + user.UserStatus + "\n");
 							WriteOne(user.UserName);
 						}
-//						WriteOne("-----------------------------\n");
 					} 
 					else if (cm.getCode().equals("601")) { // 현재 접속 유저 리스트 요청
 						String ul = "";
@@ -449,6 +504,12 @@ public class JavaObjServer extends JFrame {
 					else if (cm.getCode().equals("500")) {
 						WriteAllObject(cm);
 					} else if (cm.getCode().equals("888")) { // 프로필 사진 변경 요청, 객체 그대로 전달해준다
+						for(int i=0; i < loguser_vc.size(); i++) {
+							UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+							if(cm.getId().equals(loguser.logusername)) {
+								loguser.loguserprofileimg = cm.img;
+							}
+						}
 						WriteAllObject(cm);
 					} else if (cm.getCode().equals("999")) { // 채팅방 ID를 받으면
 //						WriteAllObject(cm); // 방은 여러개지만 모두에게 방송, 추후 변경 예정
@@ -476,6 +537,13 @@ public class JavaObjServer extends JFrame {
 						ois.close();
 						oos.close();
 						client_socket.close();
+						for(int i=0; i < loguser_vc.size(); i++) {
+							UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+							if(this.UserName.equals(loguser.logusername)){
+								loguser.loguserstatus = "OFF";
+							}
+						}
+						Login();
 						Logout(); // 에러가난 현재 객체를 벡터에서 지운다
 						break;
 					} catch (Exception ee) {

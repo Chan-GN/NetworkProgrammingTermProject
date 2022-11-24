@@ -399,29 +399,22 @@ public class JavaObjClientMain extends JFrame {
 //							System.out.println(UserName + cm.con_user_list);
 							new ChatRoomPlus(UserName, cm.con_user_list, testview);
 							break;
-						case "777":
-							if(count==0) {
-								FriendListPanel my_profile = new FriendListPanel(profileBasic,UserName,testview);
-								friend_lists.add(my_profile); // 리스트에 추가
-								myprofile.insertComponent(my_profile);
-								count++;
+						case "777": // 클라에서 유저 Login 인식하면
+							String uls[] = cm.getData().split(","); // uls[n] = username OFF, 유저 분리
+							myprofile.setText(""); // JTextPane 초기화
+							friendListArea.setText(""); // JTextPane 초기화
+							friend_lists.clear(); // 리스트 초기화
+ 							for(int i = 0; i < uls.length; i++) {
+								String uis[] = uls[i].split(" "); // uis[0] = username, uis[1] = userstatus
+								FriendListPanel f = new FriendListPanel(profileBasic, uis[0], testview, uis[1]); // 패널 추가 시 상태도 전달
+								if(uis[0].equals(UserName)) { // 이름이 같으면 마이프로필에 추가
+									myprofile.insertComponent(f);
 								}
-
-								String a = cm.getData().substring(1,cm.getData().length()-1).replaceAll(" ",""); user_list=a.split(",");
-								if(usertemp==null) {
-									for(int i=0;i<user_list.length;i++) {
-										if(user_list[i].equals(UserName))
-											continue;
-										FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[i],testview);
-										friend_lists.add(friend_list); // 리스트에 추가
-										friendListArea.insertComponent(friend_list); usertemp=user_list;
-										}
-									} 
 								else {
-								FriendListPanel friend_list = new FriendListPanel(profileBasic,user_list[user_list.length-1],testview);
-								friend_lists.add(friend_list); // 리스트에 추가
-								friendListArea.insertComponent(friend_list);
+									friendListArea.insertComponent(f);											
 								}
+								friend_lists.add(f); // 리스트에 추가
+							}							
 							break;
 						case "888": // 888을 수신받으면
 							for(FriendListPanel fl : friend_lists) { // 리스트 루프를 돌며
@@ -474,6 +467,53 @@ public class JavaObjClientMain extends JFrame {
 												chatRoomlist.usersPfImgF_3.setIcon(cm.img);
 											else
 												chatRoomlist.usersPfImgF_4.setIcon(cm.img);
+										}
+									}									
+								}
+							}
+							for(JavaObjClientChatRoom testchatview : testchatviews) {
+								String[] ul = testchatview.roomUserlist.trim().split(" ");
+								if(ul.length == 1) {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											testchatview.usersPfImgOne.setIcon(cm.img);
+										}
+									}									
+								} else if(ul.length == 2) {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											if(cm.getId().equals(testchatview.usersPfImgTwo_1.getText()))
+												testchatview.usersPfImgTwo_1.setIcon(cm.img);
+											else
+												testchatview.usersPfImgTwo_2.setIcon(cm.img);
+										}
+									}									
+								} else if(ul.length == 3) {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											if(cm.getId().equals(testchatview.usersPfImgTh_1.getText()))
+												testchatview.usersPfImgTh_1.setIcon(cm.img);
+											else if(cm.getId().equals(testchatview.usersPfImgTh_2.getText()))
+												testchatview.usersPfImgTh_2.setIcon(cm.img);
+											else
+												testchatview.usersPfImgTh_3.setIcon(cm.img);
+										}
+									}									
+								} else {
+									for(int i=0; i<ul.length; i++) {
+										if(cm.getId().equals(ul[i])) {
+//											System.out.println(cm.getId());
+											if(cm.getId().equals(testchatview.usersPfImgF_1.getText()))
+												testchatview.usersPfImgF_1.setIcon(cm.img);
+											else if(cm.getId().equals(testchatview.usersPfImgF_2.getText()))
+												testchatview.usersPfImgF_2.setIcon(cm.img);
+											else if(cm.getId().equals(testchatview.usersPfImgF_3.getText()))
+												testchatview.usersPfImgF_3.setIcon(cm.img);
+											else
+												testchatview.usersPfImgF_4.setIcon(cm.img);
 										}
 									}									
 								}

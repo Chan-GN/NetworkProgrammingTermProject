@@ -48,7 +48,6 @@ public class JavaObjClientChatRoom extends JFrame {
 	private JLabel lblUserName;
 	// private JTextArea textArea;
 	private JTextPane textArea;
-	
 	public EmojiView emoji;
 	public JavaObjClientChatRoom view;
 	public JavaObjClientMain testview; // 메인 뷰를 담을 뷰
@@ -65,6 +64,18 @@ public class JavaObjClientChatRoom extends JFrame {
 	private JButton filebtn;
 	private JButton emobtn;
 	private JButton listbtn;
+	
+	public JButton usersPfImgOne;
+	public JButton usersPfImgTwo_1;
+	public JButton usersPfImgTwo_2;
+	public JButton usersPfImgTh_1;
+	public JButton usersPfImgTh_2;
+	public JButton usersPfImgTh_3;
+	public JButton usersPfImgF_1;
+	public JButton usersPfImgF_2;
+	public JButton usersPfImgF_3;
+	public JButton usersPfImgF_4;
+	public String roomUserlist;
 
 	/**
 	 * Create the frame.
@@ -73,6 +84,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		view = this;
 		this.room_id = room_id; // 채팅방 이름
 		this.testview = testview; // 메인뷰
+		roomUserlist = userlist;
 		setResizable(false);
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 394, 630);
@@ -82,8 +94,103 @@ public class JavaObjClientChatRoom extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		String[] ul = userlist.trim().split(" ");
 		
+		usersPfImgOne = new JButton(testview.profileBasic);
+		usersPfImgOne.setBounds(9, 10, 48, 46);
+		usersPfImgOne.setBorderPainted(false);
+		usersPfImgOne.setContentAreaFilled(false);
+		usersPfImgOne.setFocusPainted(false);
 		
+		usersPfImgTwo_1 = new JButton(testview.profileBasic);
+		usersPfImgTwo_1.setBounds(9, 10, 30, 30);
+		usersPfImgTwo_1.setBorderPainted(false);
+		usersPfImgTwo_1.setContentAreaFilled(false);
+		usersPfImgTwo_1.setFocusPainted(false);
+
+		usersPfImgTwo_2 = new JButton(testview.profileBasic);
+		usersPfImgTwo_2.setBounds(25, 25, 30, 30);
+		usersPfImgTwo_2.setBorderPainted(false);
+		usersPfImgTwo_2.setContentAreaFilled(false);
+		usersPfImgTwo_2.setFocusPainted(false);
+		
+		usersPfImgTh_1 = new JButton(testview.profileBasic);
+		usersPfImgTh_1.setBounds(20, 10, 25, 25);
+		usersPfImgTh_1.setBorderPainted(false);
+		usersPfImgTh_1.setContentAreaFilled(false);
+		usersPfImgTh_1.setFocusPainted(false);
+		
+		usersPfImgTh_2 = new JButton(testview.profileBasic);
+		usersPfImgTh_2.setBounds(30, 25, 25, 25);
+		usersPfImgTh_2.setBorderPainted(false);
+		usersPfImgTh_2.setContentAreaFilled(false);
+		usersPfImgTh_2.setFocusPainted(false);
+		
+		usersPfImgTh_3 = new JButton(testview.profileBasic);
+		usersPfImgTh_3.setBounds(9, 25, 25, 25);
+		usersPfImgTh_3.setBorderPainted(false);
+		usersPfImgTh_3.setContentAreaFilled(false);
+		usersPfImgTh_3.setFocusPainted(false);
+		
+		usersPfImgF_1 = new JButton(testview.profileBasic);
+		usersPfImgF_1.setBounds(9, 10, 20, 20);
+		usersPfImgF_1.setBorderPainted(false);
+		usersPfImgF_1.setContentAreaFilled(false);
+		usersPfImgF_1.setFocusPainted(false);
+		
+		usersPfImgF_2 = new JButton(testview.profileBasic);
+		usersPfImgF_2.setBounds(35, 10, 20, 20);
+		usersPfImgF_2.setBorderPainted(false);
+		usersPfImgF_2.setContentAreaFilled(false);
+		usersPfImgF_2.setFocusPainted(false);
+
+		usersPfImgF_3 = new JButton(testview.profileBasic);
+		usersPfImgF_3.setBounds(9, 38, 20, 20);
+		usersPfImgF_3.setBorderPainted(false);
+		usersPfImgF_3.setContentAreaFilled(false);
+		usersPfImgF_3.setFocusPainted(false);
+
+		usersPfImgF_4 = new JButton(testview.profileBasic);
+		usersPfImgF_4.setBounds(35, 38, 20, 20);
+		usersPfImgF_4.setBorderPainted(false);
+		usersPfImgF_4.setContentAreaFilled(false);
+		usersPfImgF_4.setFocusPainted(false);
+
+		if(ul.length == 1) {
+			add(usersPfImgOne);			
+		} else if (ul.length == 2) {
+			usersPfImgTwo_1.setText(ul[0]);
+			usersPfImgTwo_1.setFont(new Font("굴림체", Font.PLAIN, 0));
+			usersPfImgTwo_2.setText(ul[1]);
+			usersPfImgTwo_2.setFont(new Font("굴림체", Font.PLAIN, 0));
+			add(usersPfImgTwo_1);
+			add(usersPfImgTwo_2);
+		} else if (ul.length == 3) {
+			usersPfImgTh_1.setText(ul[0]);
+			usersPfImgTh_1.setFont(new Font("굴림체", Font.PLAIN, 0));
+			usersPfImgTh_2.setText(ul[1]);
+			usersPfImgTh_2.setFont(new Font("굴림체", Font.PLAIN, 0));
+			usersPfImgTh_3.setText(ul[2]);
+			usersPfImgTh_3.setFont(new Font("굴림체", Font.PLAIN, 0));
+			
+			add(usersPfImgTh_1);
+			add(usersPfImgTh_2);
+			add(usersPfImgTh_3);
+		} else {
+			usersPfImgF_1.setText(ul[0]);
+			usersPfImgF_1.setFont(new Font("굴림체", Font.PLAIN, 0));
+			usersPfImgF_2.setText(ul[1]);
+			usersPfImgF_2.setFont(new Font("굴림체", Font.PLAIN, 0));
+			usersPfImgF_3.setText(ul[2]);
+			usersPfImgF_3.setFont(new Font("굴림체", Font.PLAIN, 0));
+			usersPfImgF_4.setText(ul[3]);
+			usersPfImgF_4.setFont(new Font("굴림체", Font.PLAIN, 0));
+			
+			add(usersPfImgF_1);
+			add(usersPfImgF_2);
+			add(usersPfImgF_3);
+			add(usersPfImgF_4);
+		}
 
 		ImageIcon close_img = new ImageIcon("src/closebtn.png");
 
@@ -594,23 +701,6 @@ public class JavaObjClientChatRoom extends JFrame {
 	// Server에게 network으로 전송
 	public void SendMessage(String msg) {
 		EmoLabel.setVisible(false);
-//		try {
-//			ChatMsg obcm = new ChatMsg(UserName, "200", msg);
-//			testview.SendObject(obcm);
-//			oos.writeObject(obcm);
-//		} 
-//		catch (IOException e) {
-//			AppendText("oos.writeObject() error");
-//			try {
-//				ois.close();
-//				oos.close();
-//				socket.close();
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//				System.exit(0);
-//			}
-//		}
 		ChatMsg obcm = new ChatMsg(UserName, "200", msg);
 		obcm.setRoomId(room_id);
 		testview.SendObject(obcm); // 메인 뷰의 SendObject를 호출
@@ -619,11 +709,6 @@ public class JavaObjClientChatRoom extends JFrame {
 
 	public void SendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		EmoLabel.setVisible(false);
-//		try {
-//			oos.writeObject(ob);
-//		} catch (IOException e) {
-//			AppendText("SendObject Error");
-//		}
 		testview.SendObject(ob); // 메인 뷰의 SendObject를 호출
 
 	}
