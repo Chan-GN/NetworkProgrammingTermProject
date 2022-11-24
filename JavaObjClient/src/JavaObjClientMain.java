@@ -406,7 +406,9 @@ public class JavaObjClientMain extends JFrame {
 							friend_lists.clear(); // 리스트 초기화
  							for(int i = 0; i < uls.length; i++) {
 								String uis[] = uls[i].split(" "); // uis[0] = username, uis[1] = userstatus
-								FriendListPanel f = new FriendListPanel(profileBasic, uis[0], testview, uis[1]); // 패널 추가 시 상태도 전달
+								System.out.println(uis[0] + " " + uis[2]);
+								ImageIcon pf = new ImageIcon(uis[2]);
+								FriendListPanel f = new FriendListPanel(pf, uis[0], testview, uis[1]); // 패널 추가 시 상태도 전달
 								if(uis[0].equals(UserName)) { // 이름이 같으면 마이프로필에 추가
 									myprofile.insertComponent(f);
 								}

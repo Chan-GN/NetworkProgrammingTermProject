@@ -56,7 +56,7 @@ public class FriendListPanel extends JPanel {
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
 				setBackground(Color.LIGHT_GRAY);
-			}
+			}	
 
 			@Override
 			public void mouseClicked(MouseEvent e) {

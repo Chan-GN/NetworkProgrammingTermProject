@@ -48,6 +48,8 @@ public class JavaObjServer extends JFrame {
 	/* test code */
 	private Vector RoomVec = new Vector(); // 채팅방을 저장할 벡터
 	private Vector LoggedUserVec = new Vector();
+	
+	public ImageIcon profileBasic = new ImageIcon("src/profileIMG_basic.png");
 
 	/**
 	 * Launch the application.
@@ -209,30 +211,13 @@ public class JavaObjServer extends JFrame {
 			String msg =""; // 유저 이름, 유저 상태를 담을 msg
 			for(int i=0; i < loguser_vc.size(); i++) { // 유저 벡터 루프 돌면서
 				UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
-				msg += loguser.logusername+" "+loguser.loguserstatus + ","; // 유저 이름, 상태를 담아
+				msg += loguser.logusername +" "+loguser.loguserstatus + " " + loguser.loguserprofileimg.toString() + ","; // 유저 이름, 상태를 담아
 //				System.out.println("Server" + loguser.logusername);
 			}
 			// msg는 u1 ON,u2 OFF,u3 ON 과 같은 형식으로 저장됨
 			WriteAllList(msg); // 모두에게 방송
-//			WriteOthers(UserName);
-		}
+	}
 		
-		public void LoginSame() {
-			//AppendText("새로운 참가자 " + UserName + " 입장.");
-			//WriteOne("Welcome to Java chat server\n");
-			//WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
-//			String msg = user_list.toString();
-//			WriteOneList(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
-			String msg ="";
-			for(int i=0; i < loguser_vc.size(); i++) {
-				UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
-				msg += loguser.logusername+" "+loguser.loguserstatus + ",";
-				System.out.println("Server" + loguser.logusername);
-
-			}
-			WriteOneList(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
-		}
-
 		public void Logout() {
 			//String msg = "[" + UserName + "]님이 퇴장 하였습니다.\n";
 			UserVec.removeElement(this); // Logout한 현재 객체를 벡터에서 지운다
@@ -426,6 +411,7 @@ public class JavaObjServer extends JFrame {
 							UserLogService newuser = new UserLogService();
 							newuser.logusername = UserName; // 벡터에 이름 저장
 							newuser.loguserstatus = "ON"; // 초기 상태 ON으로 설정
+							newuser.loguserprofileimg = profileBasic;
 							LoggedUserVec.add(newuser); // 벡터에 저장
 						}
 						Login(); // 로그인
