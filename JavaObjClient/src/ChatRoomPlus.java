@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -36,6 +38,7 @@ public class ChatRoomPlus extends JFrame {
 		setBounds(100, 100, 350, 550);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(Color.white);
 
 		JScrollPane ul_scrollPane = new JScrollPane();
 		ul_scrollPane.setBounds(27, 65, 284, 379);
@@ -54,21 +57,31 @@ public class ChatRoomPlus extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel selectUsers = new JLabel("대화상대 선택");
+		selectUsers.setFont(new Font("굴림체", Font.BOLD, 16));
 		selectUsers.setBounds(27, 23, 114, 30);
 		contentPane.add(selectUsers);
 		
 		JButton confirmBtn = new JButton("확인");
-		confirmBtn.setBounds(117, 454, 91, 36);
+		confirmBtn.setBounds(150, 460, 75, 36);
+		confirmBtn.setFont(new Font("굴림", Font.PLAIN, 12));
+		confirmBtn.setBackground(new Color(250, 218, 10));
+		confirmBtn.setBorder(null);
+		confirmBtn.getCursor();
+		confirmBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		contentPane.add(confirmBtn);
 		
 		JButton cancelBtn = new JButton("취소");
-		cancelBtn.setBounds(220, 454, 91, 36);
+		cancelBtn.setBounds(235, 460, 75, 36);
+		cancelBtn.setFont(new Font("굴림", Font.PLAIN, 12));
+		cancelBtn.setBackground(Color.white);
+		cancelBtn.getCursor();
+		cancelBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		contentPane.add(cancelBtn);
 		
 		con_user_list.trim();
 		String[] user = con_user_list.split(" ");
 		for(int i=0; i<user.length; i++) {
-			ChatRoomPlusUser users = new ChatRoomPlusUser(user[i]);
+			ChatRoomPlusUser users = new ChatRoomPlusUser(user[i], testview);
 			if(user[i].equals(myname)) {
 				users.checkBox.setSelected(true);
 				users.checkBox.setEnabled(false);

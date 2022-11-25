@@ -166,7 +166,7 @@ public class ChatRoomBoxTest extends JPanel {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				setBackground(Color.LIGHT_GRAY);
+				setBackground(new Color(248, 248, 248));
 			}
 
 			@Override
