@@ -25,10 +25,12 @@ public class FriendListPanel extends JPanel {
 	private FileDialog fd;
 	public JavaObjClientMain mainview; // ºäÀÇ SendObject È°¿ëÀ» À§ÇØ
 	public FriendListPanel view;
+	public ImageIcon profile;
 	/**
 	 * Create the panel.
 	 */
 	public FriendListPanel(ImageIcon profile, String username, JavaObjClientMain testview, String userstatus) { // ºä¸¦ ÀÎÀÚ·Î ¾ò¾î¿È
+		this.profile = profile;
 		mainview = testview;
 		setLayout(null); // absolute layout
 		setBackground(Color.white);
@@ -69,7 +71,7 @@ public class FriendListPanel extends JPanel {
 		FriendList_username.setFont(new Font("±¼¸²Ã¼", Font.PLAIN, 14));
 		add(FriendList_username);
 
-		profileBtn = new JButton(profile);
+		profileBtn = new JButton(this.profile);
 		profileBtn.setBounds(12, 14, 46, 46);
 		profileBtn.setBorderPainted(false);
 		profileBtn.setContentAreaFilled(false);

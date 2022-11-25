@@ -12,7 +12,10 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -42,10 +45,11 @@ public class JavaObjClientMain extends JFrame {
 	public JavaObjClientMain testview; // view 상속을 위해 view 선언
 	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
 	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
-	private JTextPane friendListArea;
+	private JTextPane friendListArea; // 친구 프로필
 	private String test_roomid = ""; // 고유한 룸 아이디
 	private List<FriendListPanel> friend_lists = new ArrayList<FriendListPanel>(); // 친구 리스트 패널을 담을 리스트
 	private List<ChatRoomBoxTest> chatRoomlists = new ArrayList<ChatRoomBoxTest>(); // 채팅방 리스트를 담을 리스트
+	private Map<String, ImageIcon> userInfomap = new HashMap<String, ImageIcon>(); // 유저 이름과 프로필 사진을 담을 맵
 	
 	public String[] user_list;
 	
@@ -57,7 +61,7 @@ public class JavaObjClientMain extends JFrame {
 	//test//
 	public ImageIcon profileBasic = new ImageIcon("src/profileIMG_basic.png");
 	public String[] usertemp;
-	public JTextPane myprofile;
+	public JTextPane myprofile; // 내 프로필
 	public int count=0;
 	/**
 	 * Create the frame.
@@ -406,7 +410,6 @@ public class JavaObjClientMain extends JFrame {
 							friend_lists.clear(); // 리스트 초기화
  							for(int i = 0; i < uls.length; i++) {
 								String uis[] = uls[i].split(" "); // uis[0] = username, uis[1] = userstatus
-								System.out.println(uis[0] + " " + uis[2]);
 								ImageIcon pf = new ImageIcon(uis[2]);
 								FriendListPanel f = new FriendListPanel(pf, uis[0], testview, uis[1]); // 패널 추가 시 상태도 전달
 								if(uis[0].equals(UserName)) { // 이름이 같으면 마이프로필에 추가
@@ -416,9 +419,15 @@ public class JavaObjClientMain extends JFrame {
 									friendListArea.insertComponent(f);											
 								}
 								friend_lists.add(f); // 리스트에 추가
-							}							
+								setUserInfoMap(uis[0], pf); // 정보 맵에 유저 이름, 프로필 사진 전달
+ 							}			
+// 							Set<String> keySet = userInfomap.keySet();
+// 					        for (String key : keySet) {
+// 					            System.out.println(key + " : " + userInfomap.get(key).toString());
+// 					        }
 							break;
 						case "888": // 888을 수신받으면
+							setUserInfoMap(cm.getId(), cm.img); // 프로필 사진 변경 수신 시 해당하는 유저 프로필 사진 정보 변경
 							for(FriendListPanel fl : friend_lists) { // 리스트 루프를 돌며
 								if(fl.getFriendList_username().equals(cm.getId())) { // 패널의 이름과 이름이 같은 친구를 찾아서 ( 즉 변경 요청 본인 )
 									fl.profileBtn.setIcon(cm.img); // 이미지 설정
@@ -526,7 +535,7 @@ public class JavaObjClientMain extends JFrame {
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
 							String room_title = cm.selected_userlist.trim();
 							room_title = room_title.replace(" ", ", ");
-							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(room_title, profileBasic);
+							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(room_title, testview);
 							chatRoomlists.add(chatroombox_test);
 //							System.out.println(cm.getData());
 							chatroombox_test.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
@@ -592,6 +601,14 @@ public class JavaObjClientMain extends JFrame {
 		} catch (IOException e) {
 //			AppendText("SendObject Error");
 		}
+	}
+	
+	public void setUserInfoMap(String username, ImageIcon profileImage) {
+		userInfomap.put(username, profileImage);
+	}
+	
+	public ImageIcon getUserProfile(String username) { // 유저 이름을 인자로 받아
+		return userInfomap.get(username); // 맵에서 해당하는 유저의 프로필 사진을 return
 	}
 	
 	/* test code */
