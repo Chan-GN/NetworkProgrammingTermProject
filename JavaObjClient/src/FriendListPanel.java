@@ -81,13 +81,13 @@ public class FriendListPanel extends JPanel {
 
 		add(profileBtn);
 		
-		JLabel status = new JLabel();
+		JPanel status = new JPanel();
 		if(userstatus.equals("ON")) {
-			status.setText("立加吝");
+			status.setBackground(new Color(101, 226, 104));
 		} else {
-			status.setText("厚立加");
+			status.setBackground(new Color(224, 63, 99));
 		}
-		status.setBounds(207, 22, 50, 15);
+		status.setBounds(268, 26, 15, 15);
 		add(status);
 
 		profileBtn.addMouseListener(new MouseListener() {			
