@@ -53,6 +53,10 @@ public class JavaObjClientMain extends JFrame {
 	
 	public String[] user_list;
 	
+	//frame위치
+	public int frameX;
+	public int frameY;
+	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	
@@ -354,21 +358,22 @@ public class JavaObjClientMain extends JFrame {
 						cm = (ChatMsg) obcm;
 						// if(cm.getId().equals(UserName))
 							// 오른쪽에 출력
-						msg = String.format("[%s] %s", cm.getId(), cm.getData());
+//						msg = String.format("[%s] %s", cm.getId(), cm.getData());
+						msg = cm.getData();
 					} else
 						continue;
 					switch (cm.getCode()) {
 						case "200": // chat message
 							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
 								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-									testchatview.AppendText(msg); // 해당하는 채팅방에 AppendText 호출
+									testchatview.AppendText(msg, cm.getId()); // 해당하는 채팅방에 AppendText 호출
 								}
 							}
 							break;
 						case "300": // Image 첨부
 							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-										testchatview.AppendText("[" + cm.getId() + "]");
+								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서
+										testchatview.AppendText("", cm.getId());
 										testchatview.AppendImage(cm.img);
 								}
 							}
@@ -376,7 +381,7 @@ public class JavaObjClientMain extends JFrame {
 						case "301": // 더블클릭
 							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
 								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-										testchatview.AppendText("[" + cm.getId() + "]");
+										testchatview.AppendText("", cm.getId());
 										testchatview.AppendImage(cm.img);
 								}
 							}
@@ -384,6 +389,7 @@ public class JavaObjClientMain extends JFrame {
 						case "302": // 한번 클릭
 							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
 								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
+									testchatview.AppendText("", cm.getId());
 									testchatview.panelIMG=cm.img;
 									testchatview.EmoLabel.setVisible(true);
 									testchatview.EmoLabel.setIcon(cm.img);
@@ -394,13 +400,15 @@ public class JavaObjClientMain extends JFrame {
 						case "500":
 							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
 								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-									testchatview.AppendText("[" + cm.getId() + "] " + cm.filename);
+									testchatview.AppendText("", cm.getId());
 									testchatview.AppendFile(cm.file, cm.filename);
 								}
 							}
 							break;
 						case "601": // 현재 접속한 유저 리스트를 받음
 //							System.out.println(UserName + cm.con_user_list);
+							frameX=getBounds().x;
+							frameY=getBounds().y;
 							new ChatRoomPlus(UserName, cm.con_user_list, testview);
 							break;
 						case "777": // 클라에서 유저 Login 인식하면
@@ -409,8 +417,10 @@ public class JavaObjClientMain extends JFrame {
 							friendListArea.setText(""); // JTextPane 초기화
 							friend_lists.clear(); // 리스트 초기화
  							for(int i = 0; i < uls.length; i++) {
-								String uis[] = uls[i].split(" "); // uis[0] = username, uis[1] = userstatus
+								String uis[] = uls[i].split(" ", 3); // uis[0] = username, uis[1] = userstatus, uis[2] = profileIMG
+//								System.out.println(uis[2]);
 								ImageIcon pf = new ImageIcon(uis[2]);
+								System.out.println(pf.toString());
 								FriendListPanel f = new FriendListPanel(pf, uis[0], testview, uis[1]); // 패널 추가 시 상태도 전달
 								if(uis[0].equals(UserName)) { // 이름이 같으면 마이프로필에 추가
 									myprofile.insertComponent(f);
@@ -549,6 +559,8 @@ public class JavaObjClientMain extends JFrame {
 								public void mousePressed(MouseEvent e) { 
 									// TODO Auto-generated method stub
 									if (e.getClickCount()==2){ // 두번 클릭하면
+										frameX = getBounds().x;
+										frameY = getBounds().y;
 										testchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), testview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
 									}
 								}
@@ -574,6 +586,8 @@ public class JavaObjClientMain extends JFrame {
 							chatRoomArea.replaceSelection("\n");
 							String username = cm.getId();
 							if(UserName.equals(username)) {
+									frameX = getBounds().x;
+									frameY = getBounds().y;
 									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview, cm.selected_userlist));
 							}
 							break;

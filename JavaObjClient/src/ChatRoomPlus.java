@@ -35,7 +35,7 @@ public class ChatRoomPlus extends JFrame {
 	@SuppressWarnings("null")
 	public ChatRoomPlus(String myname, String con_user_list, JavaObjClientMain testview) {
 		mainview = testview;
-		setBounds(100, 100, 350, 550);
+		setBounds(mainview.frameX + 23, mainview.frameY + 50, 350, 550);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(Color.white);

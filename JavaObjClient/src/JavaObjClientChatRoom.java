@@ -87,7 +87,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		roomUserlist = userlist;
 		setResizable(false);
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 394, 630);
+		setBounds(testview.frameX, testview.frameY, 394, 630);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(new Color(186, 206, 224));
@@ -507,37 +507,55 @@ public class JavaObjClientChatRoom extends JFrame {
 
 
 	// 화면에 출력
-	public void AppendText(String msg) {
+	public void AppendText(String msg, String username) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
 		int len = textArea.getDocument().getLength();
 		textArea.setCaretPosition(len);
-		textArea.replaceSelection(msg + "\n");
+//		textArea.replaceSelection(msg + "\n");
 		
-		
-		// 받은 문자열에서 이름 분리
-		String[] msg_c = msg.split(" ");
-		String username = msg_c[0];
-		if(("["+this.UserName+"]").equals(username)) { // 보낸 사람이 자신이라면 오른쪽 정렬
-			alignLeft();
+		if(UserName.equals(username)) { // 보낸 사람이 자신이라면 오른쪽 정렬
+			AppendTextRight(msg);
 		} else { // 보낸 사람이 타인이라면 왼쪽 정렬
-			alignRight();
+			AppendTextLeft(msg, username);
 		}
 	}
 
-	public void alignLeft() {
-		StyledDocument doc = textArea.getStyledDocument();
-		SimpleAttributeSet right = new SimpleAttributeSet();
-		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
-		StyleConstants.setForeground(right, Color.blue);
-		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), right, false);
-	}
-	
-	public void alignRight() {
+	public void AppendTextLeft(String msg, String username) {
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet left = new SimpleAttributeSet();
 		StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
-		StyleConstants.setForeground(left, Color.black);
-		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), left, false);		
+		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), left, true);
+		OthersChatPanel ocp = new OthersChatPanel();
+		ocp.profileBtn.setIcon(testview.getUserProfile(username));
+		ocp.username.setText(username);
+		JLabel chatLabel = new JLabel(msg);
+		chatLabel.setOpaque(true);
+		chatLabel.setBackground(Color.white);
+		chatLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		textArea.insertComponent(ocp);
+		int len = textArea.getDocument().getLength();
+		textArea.setCaretPosition(len);
+		if(!msg.equals("")) {
+			textArea.replaceSelection("\n");
+			textArea.insertComponent(chatLabel);			
+		}
+	}
+	
+	public void AppendTextRight(String msg) {
+		StyledDocument doc = textArea.getStyledDocument();
+		SimpleAttributeSet right = new SimpleAttributeSet();
+		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
+		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), right, false);
+		if(!msg.equals("")) {
+			JLabel chatLabel = new JLabel(msg+"\n");
+			chatLabel.setOpaque(true);
+			chatLabel.setBackground(new Color(255, 235, 51));
+			chatLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+			textArea.insertComponent(chatLabel);			
+			int len = textArea.getDocument().getLength();
+			textArea.setCaretPosition(len);
+			textArea.replaceSelection("\n");
+		}
 	}
 	
 	public void setHandCursor(JButton btn) { // 버튼에 커서 올릴 시 커서 변경하는 메소드
