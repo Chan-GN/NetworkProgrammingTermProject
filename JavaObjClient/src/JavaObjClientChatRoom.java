@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -53,7 +56,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	public int frameX;
 	public int frameY;
 	public ImageIcon panelIMG;
-		
+	private List<OthersChatPanel> othersChatPanels;
 	private Frame frame;
 	private FileDialog fd;
 	private JButton imgBtn;
@@ -85,7 +88,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		contentPane.setBackground(new Color(186, 206, 224));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		othersChatPanels = new ArrayList<>();
 		String[] ul = userlist.trim().split(" ");
 		
 		usersPfImgOne = new JButton();
@@ -524,6 +527,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		chatLabel.setOpaque(true);
 		chatLabel.setBackground(Color.white);
 		chatLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		othersChatPanels.add(ocp);
 		textArea.insertComponent(ocp);
 		int len = textArea.getDocument().getLength();
 		textArea.setCaretPosition(len);
@@ -661,10 +665,19 @@ public class JavaObjClientChatRoom extends JFrame {
 		mainview.SendObject(obcm); // 메인 뷰의 SendObject를 호출
 	}
 
-
 	public void SendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		EmoLabel.setVisible(false);
 		mainview.SendObject(ob); // 메인 뷰의 SendObject를 호출
 
+	}
+	
+	public void setOthersProfile(String othersName, ImageIcon othersProfile) {
+		System.out.println(othersName);
+		for(OthersChatPanel ocp: othersChatPanels) {
+			if(ocp.username.getText().equals(othersName)) {
+				System.out.println("hello!!\n");
+				ocp.profileBtn.setIcon(othersProfile);
+			}
+		}
 	}
 }

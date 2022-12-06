@@ -524,6 +524,10 @@ public class JavaObjClientMain extends JFrame {
 										}
 									}									
 								}
+								for(JavaObjClientChatRoom chatroom: mainchatviews) {
+									chatroom.setOthersProfile(cm.getId(), makeFitImage(cm.img, 46, 46));
+								}
+
 							}
 							break;
 						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
