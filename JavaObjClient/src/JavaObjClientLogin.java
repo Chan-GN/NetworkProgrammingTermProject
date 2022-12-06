@@ -1,6 +1,3 @@
-// JavaObjClient.java
-// ObjecStream 사용하는 채팅 Client
-
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -20,18 +17,12 @@ import java.awt.event.ActionEvent;
 
 public class JavaObjClientLogin extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtUserName;
 	private JTextField txtIpAddress;
 	private JTextField txtPortNumber;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,9 +36,6 @@ public class JavaObjClientLogin extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public JavaObjClientLogin() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 394, 630);
@@ -99,7 +87,7 @@ public class JavaObjClientLogin extends JFrame {
 		contentPane.add(btnConnect);
 		
 		JPanel panel = new JPanel() {
-			Image background = new ImageIcon("src/main_logo.png").getImage();
+			Image background = new ImageIcon("src/resources/main_logo.png").getImage();
 			public void paint(Graphics g) {
 				g.drawImage(background, 0, 0, null);
 				
@@ -118,12 +106,14 @@ public class JavaObjClientLogin extends JFrame {
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String username = txtUserName.getText().trim();
-			String ip_addr = txtIpAddress.getText().trim();
-			String port_no = txtPortNumber.getText().trim();
-//			JavaObjClientChatRoom view = new JavaObjClientChatRoom(username, ip_addr, port_no);
-			JavaObjClientMain view = new JavaObjClientMain(username, ip_addr, port_no);
-			setVisible(false);
+			if(!txtUserName.getText().trim().equals("")) {
+				String username = txtUserName.getText().trim();
+				String ip_addr = txtIpAddress.getText().trim();
+				String port_no = txtPortNumber.getText().trim();
+//				JavaObjClientChatRoom view = new JavaObjClientChatRoom(username, ip_addr, port_no);
+				JavaObjClientMain view = new JavaObjClientMain(username, ip_addr, port_no);
+				setVisible(false);
+			}
 		}
 	}
 }

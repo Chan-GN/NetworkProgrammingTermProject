@@ -16,10 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 
 public class ChatRoomPlus extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public JavaObjClientMain mainview;
@@ -27,14 +23,9 @@ public class ChatRoomPlus extends JFrame {
 	public JTextPane ulArea;
 	public List<ChatRoomPlusUser> userslist = new ArrayList<ChatRoomPlusUser>();
 
-	/**
-	 * Create the frame.
-	 * @param testview 
-	 * @param con_user_list 
-	 */
 	@SuppressWarnings("null")
-	public ChatRoomPlus(String myname, String con_user_list, JavaObjClientMain testview) {
-		mainview = testview;
+	public ChatRoomPlus(String myname, String con_user_list, JavaObjClientMain view) {
+		mainview = view;
 		setBounds(mainview.frameX + 23, mainview.frameY + 50, 350, 550);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -81,7 +72,7 @@ public class ChatRoomPlus extends JFrame {
 		con_user_list.trim();
 		String[] user = con_user_list.split(" ");
 		for(int i=0; i<user.length; i++) {
-			ChatRoomPlusUser users = new ChatRoomPlusUser(user[i], testview);
+			ChatRoomPlusUser users = new ChatRoomPlusUser(user[i], view);
 			if(user[i].equals(myname)) {
 				users.checkBox.setSelected(true);
 				users.checkBox.setEnabled(false);
@@ -91,13 +82,11 @@ public class ChatRoomPlus extends JFrame {
 		}
 		
 		confirmBtn.addActionListener(new ActionListener(){
-			// 여기서부터 진행
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String userlist = "";
 				for(ChatRoomPlusUser username : userslist) {
 					if(username.checkBox.isSelected()) {
-//						System.out.println(username.getUserName());
 						userlist += username.getUserName() + " ";
 					}
 				}

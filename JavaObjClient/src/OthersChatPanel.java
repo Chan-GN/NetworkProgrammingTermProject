@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -25,10 +28,19 @@ public class OthersChatPanel extends JPanel {
 		profileBtn.setFocusPainted(false);
 		profileBtn.getCursor();
 		profileBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		profileBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				OthersProfileImage profileViewer = new OthersProfileImage();
+				profileViewer.setProfileImage(profileBtn.getIcon());
+			}			
+		});
 
 		add(profileBtn);
 		
 		username = new JLabel();
+		username.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, 12));
 		username.setLocation(60, 6);
 		username.setSize(100, 20);
 		add(username);

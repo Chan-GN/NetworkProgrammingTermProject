@@ -7,10 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -46,11 +43,10 @@ public class JavaObjClientChatRoom extends JFrame {
 	private JButton btnSend;
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	private JLabel lblUserName;
-	// private JTextArea textArea;
 	private JTextPane textArea;
 	public EmojiView emoji;
 	public JavaObjClientChatRoom view;
-	public JavaObjClientMain testview; // 메인 뷰를 담을 뷰
+	public JavaObjClientMain mainview; // 메인 뷰를 담을 뷰
 	private String room_id;
 	private JLabel room_title;
 	//frame위치
@@ -77,17 +73,13 @@ public class JavaObjClientChatRoom extends JFrame {
 	public JButton usersPfImgF_4;
 	public String roomUserlist;
 
-	/**
-	 * Create the frame.
-	 */
-	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain testview, String userlist) { // username을 맨 앞으로 해서 방 이름 생성하면 고유한 ID 생성됨 // UserList도 인자에 추가
+	public JavaObjClientChatRoom(String username, String room_id, JavaObjClientMain mview, String userlist) { // username을 맨 앞으로 해서 방 이름 생성하면 고유한 ID 생성됨 // UserList도 인자에 추가
 		view = this;
 		this.room_id = room_id; // 채팅방 이름
-		this.testview = testview; // 메인뷰
+		this.mainview = mview; // 메인뷰
 		roomUserlist = userlist;
 		setResizable(false);
-//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(testview.frameX, testview.frameY, 394, 630);
+		setBounds(mview.frameX, mview.frameY, 394, 630);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(new Color(186, 206, 224));
@@ -157,26 +149,26 @@ public class JavaObjClientChatRoom extends JFrame {
 		usersPfImgF_4.setFocusPainted(false);
 
 		if(ul.length == 1) {
-			usersPfImgOne.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgOne.setIcon(mview.getUserProfile(ul[0], 40, 36)); // 메인에서 이미지 받아옴
 			add(usersPfImgOne);
 		} else if (ul.length == 2) {
 			usersPfImgTwo_1.setText(ul[0]);
-			usersPfImgTwo_1.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgTwo_1.setIcon(mview.getUserProfile(ul[0], 36, 30));
 			usersPfImgTwo_1.setFont(new Font("굴림체", Font.PLAIN, 0));
 			usersPfImgTwo_2.setText(ul[1]);
-			usersPfImgTwo_2.setIcon(testview.getUserProfile(ul[1]));
+			usersPfImgTwo_2.setIcon(mview.getUserProfile(ul[1], 36, 30));
 			usersPfImgTwo_2.setFont(new Font("굴림체", Font.PLAIN, 0));
 			add(usersPfImgTwo_1);
 			add(usersPfImgTwo_2);
 		} else if (ul.length == 3) {
 			usersPfImgTh_1.setText(ul[0]);
-			usersPfImgTh_1.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgTh_1.setIcon(mview.getUserProfile(ul[0], 30, 24));
 			usersPfImgTh_1.setFont(new Font("굴림체", Font.PLAIN, 0));
 			usersPfImgTh_2.setText(ul[1]);
-			usersPfImgTh_2.setIcon(testview.getUserProfile(ul[1]));
+			usersPfImgTh_2.setIcon(mview.getUserProfile(ul[1], 30, 24));
 			usersPfImgTh_2.setFont(new Font("굴림체", Font.PLAIN, 0));
 			usersPfImgTh_3.setText(ul[2]);
-			usersPfImgTh_3.setIcon(testview.getUserProfile(ul[2]));
+			usersPfImgTh_3.setIcon(mview.getUserProfile(ul[2], 30 ,24));
 			usersPfImgTh_3.setFont(new Font("굴림체", Font.PLAIN, 0));
 			
 			add(usersPfImgTh_1);
@@ -184,16 +176,16 @@ public class JavaObjClientChatRoom extends JFrame {
 			add(usersPfImgTh_3);
 		} else {
 			usersPfImgF_1.setText(ul[0]);
-			usersPfImgF_1.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgF_1.setIcon(mview.getUserProfile(ul[0], 24, 16));
 			usersPfImgF_1.setFont(new Font("굴림체", Font.PLAIN, 0));
 			usersPfImgF_2.setText(ul[1]);
-			usersPfImgF_2.setIcon(testview.getUserProfile(ul[1]));
+			usersPfImgF_2.setIcon(mview.getUserProfile(ul[1], 24, 16));
 			usersPfImgF_2.setFont(new Font("굴림체", Font.PLAIN, 0));
 			usersPfImgF_3.setText(ul[2]);
-			usersPfImgF_3.setIcon(testview.getUserProfile(ul[2]));
+			usersPfImgF_3.setIcon(mview.getUserProfile(ul[2], 24, 16));
 			usersPfImgF_3.setFont(new Font("굴림체", Font.PLAIN, 0));
 			usersPfImgF_4.setText(ul[3]);
-			usersPfImgF_4.setIcon(testview.getUserProfile(ul[3]));
+			usersPfImgF_4.setIcon(mview.getUserProfile(ul[3], 24, 16));
 			usersPfImgF_4.setFont(new Font("굴림체", Font.PLAIN, 0));
 			
 			add(usersPfImgF_1);
@@ -202,7 +194,8 @@ public class JavaObjClientChatRoom extends JFrame {
 			add(usersPfImgF_4);
 		}
 
-		ImageIcon close_img = new ImageIcon("src/closebtn.png");
+
+		ImageIcon close_img = new ImageIcon("src/resources/closebtn.png");
 
 		//이모티콘 패널
 		EmoLabel = new JLabel() {
@@ -294,7 +287,7 @@ public class JavaObjClientChatRoom extends JFrame {
 				
 		
 		// 이미지 버튼 생성
-		ImageIcon emobtn_img = new ImageIcon("src/emoticon_btn.png");
+		ImageIcon emobtn_img = new ImageIcon("src/resources/emoticon_btn.png");
 		emobtn = new JButton(emobtn_img);
 		emobtn.setBounds(10, 550, 25, 25);
 		emobtn.setBorder(BorderFactory.createEmptyBorder());
@@ -303,7 +296,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		contentPane.add(emobtn);
 
 		
-		ImageIcon imgbtn_img = new ImageIcon("src/image_btn.png");
+		ImageIcon imgbtn_img = new ImageIcon("src/resources/image_btn.png");
 		imgBtn = new JButton(imgbtn_img);
 		imgBtn.setBounds(45, 550, 25, 25);
 		imgBtn.setBorder(BorderFactory.createEmptyBorder());
@@ -311,7 +304,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		setHandCursor(imgBtn);
 		contentPane.add(imgBtn);
 		
-		ImageIcon filebtn_img = new ImageIcon("src/file_btn.png");
+		ImageIcon filebtn_img = new ImageIcon("src/resources/file_btn.png");
 		filebtn = new JButton(filebtn_img);
 		filebtn.setBounds(80, 550, 25, 25);
 		filebtn.setBorder(BorderFactory.createEmptyBorder());
@@ -319,7 +312,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		setHandCursor(filebtn);
 		contentPane.add(filebtn);
 		
-		ImageIcon listbtn_img = new ImageIcon("src/list_btn.png");
+		ImageIcon listbtn_img = new ImageIcon("src/resources/list_btn.png");
 		listbtn = new JButton(listbtn_img);
 		listbtn.setBounds(115, 550, 25, 25);
 		listbtn.setBorder(BorderFactory.createEmptyBorder());
@@ -348,7 +341,6 @@ public class JavaObjClientChatRoom extends JFrame {
 		
 		setVisible(true);
 		
-		/* test code */ // 액션 리스너만 생성
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
@@ -488,8 +480,8 @@ public class JavaObjClientChatRoom extends JFrame {
 		}
 	}
 	
-	ImageIcon icon1 = new ImageIcon("src/icon1.jpg");
-	ImageIcon icon2 = new ImageIcon("src/icon2.jpg");
+	ImageIcon icon1 = new ImageIcon("src/resources/icon1.jpg");
+	ImageIcon icon2 = new ImageIcon("src/resources/icon2.jpg");
 	private JPanel panel_1;
 
 	public String getRoomId() {
@@ -526,7 +518,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
 		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), left, true);
 		OthersChatPanel ocp = new OthersChatPanel();
-		ocp.profileBtn.setIcon(testview.getUserProfile(username));
+		ocp.profileBtn.setIcon(mainview.getUserProfile(username, 40, 36));
 		ocp.username.setText(username);
 		JLabel chatLabel = new JLabel(msg);
 		chatLabel.setOpaque(true);
@@ -566,7 +558,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	public void AppendFile(byte[] file, String filename) { // 파일 내용, 파일 전송 유저, 파일 이름
 		int len = textArea.getDocument().getLength();
 		textArea.setCaretPosition(len); // place caret at the end (with no selection)
-		ImageIcon filebtn_img = new ImageIcon("src/filedown_btn.png"); 
+		ImageIcon filebtn_img = new ImageIcon("src/resources/filedown_btn.png"); 
 		JButton file_yes = new JButton(filebtn_img); // 파일 수신 패널의 이미지 버튼
 		setHandCursor(file_yes);
 		file_yes.setBorder(BorderFactory.createEmptyBorder());
@@ -622,14 +614,14 @@ public class JavaObjClientChatRoom extends JFrame {
 		width = ori_icon.getIconWidth();
 		height = ori_icon.getIconHeight();
 		// Image가 너무 크면 최대 가로 또는 세로 250 기준으로 축소시킨다.
-		if (width > 250 || height > 250) {
+		if (width > 150 || height > 150) {
 			if (width > height) { // 가로 사진
 				ratio = (double) height / width;
-				width = 200;
+				width = 100;
 				height = (int) (width * ratio);
 			} else { // 세로 사진
 				ratio = (double) width / height;
-				height = 200;
+				height = 100;
 				width = (int) (height * ratio);
 			}
 			Image new_img = ori_img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -666,13 +658,13 @@ public class JavaObjClientChatRoom extends JFrame {
 		EmoLabel.setVisible(false);
 		ChatMsg obcm = new ChatMsg(UserName, "200", msg);
 		obcm.setRoomId(room_id);
-		testview.SendObject(obcm); // 메인 뷰의 SendObject를 호출
+		mainview.SendObject(obcm); // 메인 뷰의 SendObject를 호출
 	}
 
 
 	public void SendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		EmoLabel.setVisible(false);
-		testview.SendObject(ob); // 메인 뷰의 SendObject를 호출
+		mainview.SendObject(ob); // 메인 뷰의 SendObject를 호출
 
 	}
 }

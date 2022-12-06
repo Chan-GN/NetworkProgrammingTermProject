@@ -18,6 +18,7 @@ class ChatMsg implements Serializable {
 	public String user_list;
 	public String con_user_list; // 현재 접속 유저
 	public String selected_userlist; // 선택된 유저
+	public ImageIcon profileImg;
 
 
 	public ChatMsg(String id, String code, String msg) {

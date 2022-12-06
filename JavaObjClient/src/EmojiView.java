@@ -1,57 +1,17 @@
-
-// JavaObjClientView.java ObjecStram 기반 Client
-//실질적인 채팅 창
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.FileDialog;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.ImageObserver;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.Socket;
-import java.security.PublicKey;
-
-import javax.management.loading.PrivateClassLoader;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.color.ColorSpace;
 import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.Icon;
-import javax.swing.ScrollPaneConstants;
 
 public class EmojiView extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -70,12 +30,12 @@ public class EmojiView extends JFrame {
 
 	
 	public EmojiView(String username, JavaObjClientChatRoom view)  {
-		mainview=view;
+		mainview = view;
 		UserName = username;
 		setVisible(true);
 		//이모티콘 창 아이콘
 		Toolkit tollkit=Toolkit.getDefaultToolkit();
-		Image icon= tollkit.getImage("src/emoframicon.png");
+		Image icon= tollkit.getImage("src/resources/emoframicon.png");
 		
 		ImageIcon emoji1=new ImageIcon("src/emoji/emoji1.png");
 		ImageIcon emoji2=new ImageIcon("src/emoji/emoji2.png");

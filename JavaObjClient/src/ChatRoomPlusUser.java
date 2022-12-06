@@ -12,20 +12,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 public class ChatRoomPlusUser extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3425750604862704099L;
-	/**
-	 * 
-	 */
 	public JButton profileBtn;
 	private JLabel user_name;
 	public JCheckBox checkBox;
-	/**
-	 * Create the panel.
-	 */
-	public ChatRoomPlusUser(String username, JavaObjClientMain testview) {
+
+	public ChatRoomPlusUser(String username, JavaObjClientMain mainview) {
 		setLayout(null); // absolute layout
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(320,60)); // 높이 설정만 가능한듯 ?
@@ -33,9 +25,9 @@ public class ChatRoomPlusUser extends JPanel {
 		user_name.setBounds(65, 16, 114, 30);
 		user_name.setFont(new Font("굴림체", Font.PLAIN, 14));
 		add(user_name);
-		System.out.println(testview.getUserProfile(username).toString());
+		System.out.println(mainview.getUserProfile(username, 40, 36).toString());
 		
-		ImageIcon profile = testview.getUserProfile(username);
+		ImageIcon profile = mainview.getUserProfile(username, 40, 36);
 		profileBtn = new JButton(profile);
 		profileBtn.setBounds(8, 8, 46, 46);
 		profileBtn.setBorderPainted(false);

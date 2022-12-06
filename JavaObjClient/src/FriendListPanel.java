@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -15,9 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class FriendListPanel extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7410115339163008109L;
 	private JLabel FriendList_username;
 	public JButton profileBtn;
@@ -26,12 +24,10 @@ public class FriendListPanel extends JPanel {
 	public JavaObjClientMain mainview; // 뷰의 SendObject 활용을 위해
 	public FriendListPanel view;
 	public ImageIcon profile;
-	/**
-	 * Create the panel.
-	 */
-	public FriendListPanel(ImageIcon profile, String username, JavaObjClientMain testview, String userstatus) { // 뷰를 인자로 얻어옴
+
+	public FriendListPanel(ImageIcon profile, String username, JavaObjClientMain view, String userstatus) { // 뷰를 인자로 얻어옴
 		this.profile = profile;
-		mainview = testview;
+		mainview = view;
 		setLayout(null); // absolute layout
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(320,70)); // 높이 설정만 가능한듯 ?
@@ -142,6 +138,9 @@ public class FriendListPanel extends JPanel {
 							mainview.SendObject(obcm); // 메인뷰의 SendObject 호출
 						}	
 					}
+				} else {
+					OthersProfileImage profileViewer = new OthersProfileImage();
+					profileViewer.setProfileImage(profileBtn.getIcon());
 				}
 			}
 			
@@ -150,4 +149,5 @@ public class FriendListPanel extends JPanel {
 	public String getFriendList_username() {
 		return FriendList_username.getText();
 	}
+	
 }

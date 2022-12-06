@@ -49,7 +49,7 @@ public class JavaObjServer extends JFrame {
 	private Vector RoomVec = new Vector(); // 채팅방을 저장할 벡터
 	private Vector LoggedUserVec = new Vector();
 	
-	public ImageIcon profileBasic = new ImageIcon("src/profileIMG_basic.png");
+	public ImageIcon profileBasic = new ImageIcon("src/resources/profileIMG_basic.png");
 
 	/**
 	 * Launch the application.

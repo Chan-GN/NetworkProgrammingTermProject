@@ -28,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Color;
 import java.awt.Cursor;
 
@@ -42,13 +43,13 @@ public class JavaObjClientMain extends JFrame {
 	
 	/* test code */
 	private Socket socket; // 연결소켓
-	public JavaObjClientMain testview; // view 상속을 위해 view 선언
-	public List<JavaObjClientChatRoom> testchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
+	public JavaObjClientMain mainview; // view 상속을 위해 view 선언
+	public List<JavaObjClientChatRoom> mainchatviews = new ArrayList<JavaObjClientChatRoom>(); // 클라이언트의 채팅방을 담아두는 리스트
 	private JTextPane chatRoomArea; // scrollpane 내부에 하위의 chatRoomBox를 담아줄 친구
 	private JTextPane friendListArea; // 친구 프로필
-	private String test_roomid = ""; // 고유한 룸 아이디
+	private String room_id = ""; // 고유한 룸 아이디
 	private List<FriendListPanel> friend_lists = new ArrayList<FriendListPanel>(); // 친구 리스트 패널을 담을 리스트
-	private List<ChatRoomBoxTest> chatRoomlists = new ArrayList<ChatRoomBoxTest>(); // 채팅방 리스트를 담을 리스트
+	private List<ChatRoomBox> chatRoomlists = new ArrayList<ChatRoomBox>(); // 채팅방 리스트를 담을 리스트
 	private Map<String, ImageIcon> userInfomap = new HashMap<String, ImageIcon>(); // 유저 이름과 프로필 사진을 담을 맵
 	
 	public String[] user_list;
@@ -63,7 +64,7 @@ public class JavaObjClientMain extends JFrame {
 	public JButton btnfriend;
 	public JButton btnchat;
 	//test//
-	public ImageIcon profileBasic = new ImageIcon("src/profileIMG_basic.png");
+	public ImageIcon profileBasic = new ImageIcon("src/resources/profileIMG_basic.png");
 	public String[] usertemp;
 	public JTextPane myprofile; // 내 프로필
 	public int count=0;
@@ -165,12 +166,12 @@ public class JavaObjClientMain extends JFrame {
 		contentPane.add(chatLabel);
 		
 		// 이미지 버튼 생성
-		ImageIcon friend_icon_c = new ImageIcon("src/friendbtn_c.png");
-		ImageIcon friend_icon_n = new ImageIcon("src/friendbtn_n.png");
-		ImageIcon friend_icon_o = new ImageIcon("src/friendbtn_o.png");
-		ImageIcon chat_icon_n = new ImageIcon("src/chatbtn_n.png");
-		ImageIcon chat_icon_o = new ImageIcon("src/chatbtn_o.png");
-		ImageIcon chat_icon_c = new ImageIcon("src/chatbtn_c.png");
+		ImageIcon friend_icon_c = new ImageIcon("src/resources/friendbtn_c.png");
+		ImageIcon friend_icon_n = new ImageIcon("src/resources/friendbtn_n.png");
+		ImageIcon friend_icon_o = new ImageIcon("src/resources/friendbtn_o.png");
+		ImageIcon chat_icon_n = new ImageIcon("src/resources/chatbtn_n.png");
+		ImageIcon chat_icon_o = new ImageIcon("src/resources/chatbtn_o.png");
+		ImageIcon chat_icon_c = new ImageIcon("src/resources/chatbtn_c.png");
 		
 		btnfriend = new JButton(friend_icon_n);
 		btnfriend.setBounds(8, 21, 45, 45);
@@ -208,13 +209,13 @@ public class JavaObjClientMain extends JFrame {
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/friendbtn_c.png")
+				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/resources/friendbtn_c.png")
 					btnfriend.setIcon(friend_icon_n);
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/friendbtn_c.png")
+				if(btnfriend.getIcon() != null && btnfriend.getIcon().toString() != "src/resources/friendbtn_c.png")
 					btnfriend.setIcon(friend_icon_o);
 				
 			}
@@ -261,14 +262,14 @@ public class JavaObjClientMain extends JFrame {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				if(btnchat.getIcon() != null && btnchat.getIcon().toString() != "src/chatbtn_c.png")
+				if(btnchat.getIcon() != null && btnchat.getIcon().toString() != "src/resources/chatbtn_c.png")
 					btnchat.setIcon(chat_icon_n);
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				if(btnchat.getIcon() != null && btnchat.getIcon().toString() != "src/chatbtn_c.png")
+				if(btnchat.getIcon() != null && btnchat.getIcon().toString() != "src/resources/chatbtn_c.png")
 					btnchat.setIcon(chat_icon_o);
 			}
 			
@@ -280,7 +281,7 @@ public class JavaObjClientMain extends JFrame {
 		});
 		contentPane.add(btnchat);
 		
-		ImageIcon chatplus_icon = new ImageIcon("src/chatplus_test.png");
+		ImageIcon chatplus_icon = new ImageIcon("src/resources/chatplus_test.png");
 		JButton btnchatplus= new JButton(chatplus_icon);
 		btnchatplus.setBounds(323, 14, 45, 45);
 		btnchatplus.setBorder(BorderFactory.createEmptyBorder());
@@ -293,16 +294,6 @@ public class JavaObjClientMain extends JFrame {
 			public void actionPerformed(ActionEvent e) { // 버튼이 눌리면
 				ChatMsg obcm = new ChatMsg(UserName, "601", "LIST");
 				SendObject(obcm);
-				
-				// 추후 사용 예정 로직
-//				Date now = new Date(); // 현재 날짜 및 시간을 계산해서
-//				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
-//				test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
-//				SendRoomId(test_roomid); // 서버로 채팅방 이름 보냄
-//				testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview)); // 채팅방에는 유저 이름과 채팅방 이름, 현재 유저의 Mainview 전달, 추후 채팅방 유저 리스트 추가 요망
-//				for(JavaObjClientChatRoom testchatview : testchatviews) {
-////					System.out.println(testchatview.getRoomId());
-//				}
 			}
 		});
 		contentPane.add(btnchatplus);
@@ -315,7 +306,7 @@ public class JavaObjClientMain extends JFrame {
 		setVisible(true);
 		
 		UserName = username;
-		testview = this; // 뷰 상속을 위해
+		mainview = this; // 뷰 상속을 위해
 		
 		try {
 			socket = new Socket(ip_addr, Integer.parseInt(port_no));
@@ -364,44 +355,44 @@ public class JavaObjClientMain extends JFrame {
 						continue;
 					switch (cm.getCode()) {
 						case "200": // chat message
-							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-									testchatview.AppendText(msg, cm.getId()); // 해당하는 채팅방에 AppendText 호출
+							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
+								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
+									mainchatview.AppendText(msg, cm.getId()); // 해당하는 채팅방에 AppendText 호출
 								}
 							}
 							break;
 						case "300": // Image 첨부
-							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서
-										testchatview.AppendText("", cm.getId());
-										testchatview.AppendImage(cm.img);
+							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
+								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서
+									mainchatview.AppendText("", cm.getId());
+									mainchatview.AppendImage(cm.img);
 								}
 							}
 							break;
 						case "301": // 더블클릭
-							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-										testchatview.AppendText("", cm.getId());
-										testchatview.AppendImage(cm.img);
+							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
+								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
+									mainchatview.AppendText("", cm.getId());
+									mainchatview.AppendImage(cm.img);
 								}
 							}
 							break;
 						case "302": // 한번 클릭
-							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-									testchatview.AppendText("", cm.getId());
-									testchatview.panelIMG=cm.img;
-									testchatview.EmoLabel.setVisible(true);
-									testchatview.EmoLabel.setIcon(cm.img);
-									testchatview.EmoLabel.repaint();
+							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
+								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
+									mainchatview.AppendText("", cm.getId());
+									mainchatview.panelIMG=cm.img;
+									mainchatview.EmoLabel.setVisible(true);
+									mainchatview.EmoLabel.setIcon(cm.img);
+									mainchatview.EmoLabel.repaint();
 								}
 							}
 							break;
 						case "500":
-							for(JavaObjClientChatRoom testchatview : testchatviews) { // 유저의 채팅방들을 돌며
-								if(testchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
-									testchatview.AppendText("", cm.getId());
-									testchatview.AppendFile(cm.file, cm.filename);
+							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
+								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
+									mainchatview.AppendText("", cm.getId());
+									mainchatview.AppendFile(cm.file, cm.filename);
 								}
 							}
 							break;
@@ -409,7 +400,7 @@ public class JavaObjClientMain extends JFrame {
 //							System.out.println(UserName + cm.con_user_list);
 							frameX=getBounds().x;
 							frameY=getBounds().y;
-							new ChatRoomPlus(UserName, cm.con_user_list, testview);
+							new ChatRoomPlus(UserName, cm.con_user_list, mainview);
 							break;
 						case "777": // 클라에서 유저 Login 인식하면
 							String uls[] = cm.getData().split(","); // uls[n] = username OFF, 유저 분리
@@ -421,7 +412,7 @@ public class JavaObjClientMain extends JFrame {
 //								System.out.println(uis[2]);
 								ImageIcon pf = new ImageIcon(uis[2]);
 								System.out.println(pf.toString());
-								FriendListPanel f = new FriendListPanel(pf, uis[0], testview, uis[1]); // 패널 추가 시 상태도 전달
+								FriendListPanel f = new FriendListPanel(makeFitImage(pf, 50, 45), uis[0], mainview, uis[1]); // 패널 추가 시 상태도 전달
 								if(uis[0].equals(UserName)) { // 이름이 같으면 마이프로필에 추가
 									myprofile.insertComponent(f);
 								}
@@ -431,27 +422,22 @@ public class JavaObjClientMain extends JFrame {
 								friend_lists.add(f); // 리스트에 추가
 								setUserInfoMap(uis[0], pf); // 정보 맵에 유저 이름, 프로필 사진 전달
  							}			
-// 							Set<String> keySet = userInfomap.keySet();
-// 					        for (String key : keySet) {
-// 					            System.out.println(key + " : " + userInfomap.get(key).toString());
-// 					        }
 							break;
 						case "888": // 888을 수신받으면
 							setUserInfoMap(cm.getId(), cm.img); // 프로필 사진 변경 수신 시 해당하는 유저 프로필 사진 정보 변경
 							for(FriendListPanel fl : friend_lists) { // 리스트 루프를 돌며
 								if(fl.getFriendList_username().equals(cm.getId())) { // 패널의 이름과 이름이 같은 친구를 찾아서 ( 즉 변경 요청 본인 )
-									fl.profileBtn.setIcon(cm.img); // 이미지 설정
-//									System.out.println(UserName + " 님 방 " + cm.getId());
+									fl.profileBtn.setIcon(makeFitImage(cm.img, 40, 36)); // 이미지 설정
 								}
 							}
-							for(ChatRoomBoxTest chatRoomlist: chatRoomlists) {
+							for(ChatRoomBox chatRoomlist: chatRoomlists) {
 //								System.out.println(UserName + " " + chatRoomlist.getChatroombox_title());
-								String[] ul = chatRoomlist.getChatroombox_title().trim().split(", ");
+								String[] ul = chatRoomlist.getChatroomTitle().trim().split(", ");
 								if(ul.length == 1) {
 									for(int i=0; i<ul.length; i++) {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
-											chatRoomlist.usersPfImgOne.setIcon(cm.img);
+											chatRoomlist.usersPfImgOne.setIcon(makeFitImage(cm.img, 40, 36));
 										}
 									}									
 								} else if(ul.length == 2) {
@@ -459,9 +445,9 @@ public class JavaObjClientMain extends JFrame {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
 											if(cm.getId().equals(chatRoomlist.usersPfImgTwo_1.getText()))
-												chatRoomlist.usersPfImgTwo_1.setIcon(cm.img);
+												chatRoomlist.usersPfImgTwo_1.setIcon(makeFitImage(cm.img, 36, 30));
 											else
-												chatRoomlist.usersPfImgTwo_2.setIcon(cm.img);
+												chatRoomlist.usersPfImgTwo_2.setIcon(makeFitImage(cm.img, 36, 30));
 										}
 									}									
 								} else if(ul.length == 3) {
@@ -469,11 +455,11 @@ public class JavaObjClientMain extends JFrame {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
 											if(cm.getId().equals(chatRoomlist.usersPfImgTh_1.getText()))
-												chatRoomlist.usersPfImgTh_1.setIcon(cm.img);
+												chatRoomlist.usersPfImgTh_1.setIcon(makeFitImage(cm.img, 30, 24));
 											else if(cm.getId().equals(chatRoomlist.usersPfImgTh_2.getText()))
-												chatRoomlist.usersPfImgTh_2.setIcon(cm.img);
+												chatRoomlist.usersPfImgTh_2.setIcon(makeFitImage(cm.img, 30, 24));
 											else
-												chatRoomlist.usersPfImgTh_3.setIcon(cm.img);
+												chatRoomlist.usersPfImgTh_3.setIcon(makeFitImage(cm.img, 30, 24));
 										}
 									}									
 								} else {
@@ -481,60 +467,60 @@ public class JavaObjClientMain extends JFrame {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
 											if(cm.getId().equals(chatRoomlist.usersPfImgF_1.getText()))
-												chatRoomlist.usersPfImgF_1.setIcon(cm.img);
+												chatRoomlist.usersPfImgF_1.setIcon(makeFitImage(cm.img, 24, 16));
 											else if(cm.getId().equals(chatRoomlist.usersPfImgF_2.getText()))
-												chatRoomlist.usersPfImgF_2.setIcon(cm.img);
+												chatRoomlist.usersPfImgF_2.setIcon(makeFitImage(cm.img, 24, 16));
 											else if(cm.getId().equals(chatRoomlist.usersPfImgF_3.getText()))
-												chatRoomlist.usersPfImgF_3.setIcon(cm.img);
+												chatRoomlist.usersPfImgF_3.setIcon(makeFitImage(cm.img, 24, 16));
 											else
-												chatRoomlist.usersPfImgF_4.setIcon(cm.img);
+												chatRoomlist.usersPfImgF_4.setIcon(makeFitImage(cm.img, 24, 16));
 										}
 									}									
 								}
 							}
-							for(JavaObjClientChatRoom testchatview : testchatviews) {
-								String[] ul = testchatview.roomUserlist.trim().split(" ");
+							for(JavaObjClientChatRoom mainchatview : mainchatviews) {
+								String[] ul = mainchatview.roomUserlist.trim().split(" ");
 								if(ul.length == 1) {
 									for(int i=0; i<ul.length; i++) {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
-											testchatview.usersPfImgOne.setIcon(cm.img);
+											mainchatview.usersPfImgOne.setIcon(makeFitImage(cm.img, 40, 36));
 										}
 									}									
 								} else if(ul.length == 2) {
 									for(int i=0; i<ul.length; i++) {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
-											if(cm.getId().equals(testchatview.usersPfImgTwo_1.getText()))
-												testchatview.usersPfImgTwo_1.setIcon(cm.img);
+											if(cm.getId().equals(mainchatview.usersPfImgTwo_1.getText()))
+												mainchatview.usersPfImgTwo_1.setIcon(makeFitImage(cm.img, 36, 30));
 											else
-												testchatview.usersPfImgTwo_2.setIcon(cm.img);
+												mainchatview.usersPfImgTwo_2.setIcon(makeFitImage(cm.img, 36, 30));
 										}
 									}									
 								} else if(ul.length == 3) {
 									for(int i=0; i<ul.length; i++) {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
-											if(cm.getId().equals(testchatview.usersPfImgTh_1.getText()))
-												testchatview.usersPfImgTh_1.setIcon(cm.img);
-											else if(cm.getId().equals(testchatview.usersPfImgTh_2.getText()))
-												testchatview.usersPfImgTh_2.setIcon(cm.img);
+											if(cm.getId().equals(mainchatview.usersPfImgTh_1.getText()))
+												mainchatview.usersPfImgTh_1.setIcon(makeFitImage(cm.img, 30, 24));
+											else if(cm.getId().equals(mainchatview.usersPfImgTh_2.getText()))
+												mainchatview.usersPfImgTh_2.setIcon(makeFitImage(cm.img, 30, 24));
 											else
-												testchatview.usersPfImgTh_3.setIcon(cm.img);
+												mainchatview.usersPfImgTh_3.setIcon(makeFitImage(cm.img, 30, 24));
 										}
 									}									
 								} else {
 									for(int i=0; i<ul.length; i++) {
 										if(cm.getId().equals(ul[i])) {
 //											System.out.println(cm.getId());
-											if(cm.getId().equals(testchatview.usersPfImgF_1.getText()))
-												testchatview.usersPfImgF_1.setIcon(cm.img);
-											else if(cm.getId().equals(testchatview.usersPfImgF_2.getText()))
-												testchatview.usersPfImgF_2.setIcon(cm.img);
-											else if(cm.getId().equals(testchatview.usersPfImgF_3.getText()))
-												testchatview.usersPfImgF_3.setIcon(cm.img);
+											if(cm.getId().equals(mainchatview.usersPfImgF_1.getText()))
+												mainchatview.usersPfImgF_1.setIcon(makeFitImage(cm.img, 24, 16));
+											else if(cm.getId().equals(mainchatview.usersPfImgF_2.getText()))
+												mainchatview.usersPfImgF_2.setIcon(makeFitImage(cm.img, 24, 16));
+											else if(cm.getId().equals(mainchatview.usersPfImgF_3.getText()))
+												mainchatview.usersPfImgF_3.setIcon(makeFitImage(cm.img, 24, 16));
 											else
-												testchatview.usersPfImgF_4.setIcon(cm.img);
+												mainchatview.usersPfImgF_4.setIcon(makeFitImage(cm.img, 24, 16));
 										}
 									}									
 								}
@@ -545,10 +531,10 @@ public class JavaObjClientMain extends JFrame {
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
 							String room_title = cm.selected_userlist.trim();
 							room_title = room_title.replace(" ", ", ");
-							ChatRoomBoxTest chatroombox_test = new ChatRoomBoxTest(room_title, testview);
-							chatRoomlists.add(chatroombox_test);
+							ChatRoomBox chatroombox = new ChatRoomBox(room_title, mainview);
+							chatRoomlists.add(chatroombox);
 //							System.out.println(cm.getData());
-							chatroombox_test.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
+							chatroombox.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
 								@Override
 								public void mouseClicked(MouseEvent e) {
 									// TODO Auto-generated method stub
@@ -561,7 +547,7 @@ public class JavaObjClientMain extends JFrame {
 									if (e.getClickCount()==2){ // 두번 클릭하면
 										frameX = getBounds().x;
 										frameY = getBounds().y;
-										testchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), testview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
+										mainchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), mainview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
 									}
 								}
 
@@ -582,13 +568,13 @@ public class JavaObjClientMain extends JFrame {
 								}			
 							});
 
-							chatRoomArea.insertComponent(chatroombox_test);
+							chatRoomArea.insertComponent(chatroombox);
 							chatRoomArea.replaceSelection("\n");
 							String username = cm.getId();
 							if(UserName.equals(username)) {
 									frameX = getBounds().x;
 									frameY = getBounds().y;
-									testchatviews.add(new JavaObjClientChatRoom(username, test_roomid, testview, cm.selected_userlist));
+									mainchatviews.add(new JavaObjClientChatRoom(username, room_id, mainview, cm.selected_userlist));
 							}
 							break;
 						}
@@ -621,17 +607,16 @@ public class JavaObjClientMain extends JFrame {
 		userInfomap.put(username, profileImage);
 	}
 	
-	public ImageIcon getUserProfile(String username) { // 유저 이름을 인자로 받아
-		return userInfomap.get(username); // 맵에서 해당하는 유저의 프로필 사진을 return
+	public ImageIcon getUserProfile(String username, int limit, int img_size) { // 유저 이름을 인자로 받아
+		return makeFitImage(userInfomap.get(username), limit, limit); // 맵에서 해당하는 유저의 프로필 사진을 return
 	}
 	
-	/* test code */
 	public void SendRoomId(String userlist) { // 버튼 클릭 시 
 		try {
 			Date now = new Date(); // 현재 날짜 및 시간을 계산해서
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
-			test_roomid = formatter.format(now); // 계산된 시간을 형식에 적용
-			ChatMsg obcm = new ChatMsg(UserName, "999", test_roomid);
+			room_id = formatter.format(now); // 계산된 시간을 형식에 적용
+			ChatMsg obcm = new ChatMsg(UserName, "999", room_id);
 			obcm.selected_userlist = userlist;
 			oos.writeObject(obcm); // 여기서부터 하면됨 서버에서 수신하는지?
 		} catch (IOException e) {
@@ -639,5 +624,29 @@ public class JavaObjClientMain extends JFrame {
 		}
 	}
 
+	private ImageIcon makeFitImage(ImageIcon ori_icon, int limit, int img_size) {
+		ImageIcon new_icon = ori_icon;
+		Image ori_img = ori_icon.getImage();
+		int width, height;
+		double ratio;
+		width = ori_icon.getIconWidth();
+		height = ori_icon.getIconHeight();
+		// Image가 너무 크면 최대 가로 또는 세로 250 기준으로 축소시킨다.
+		if (width > limit || height > limit) {
+			if (width > height) { // 가로 사진
+				ratio = (double) height / width;
+				width = img_size;
+				height = (int) (width * ratio);
+			} else { // 세로 사진
+				ratio = (double) width / height;
+				height = img_size;
+				width = (int) (height * ratio);
+			}
+			Image new_img = ori_img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+			new_icon = new ImageIcon(new_img);
+		}
+		
+		return new_icon;
+	}
 
 }

@@ -9,10 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class ChatRoomBoxTest extends JPanel {
-	/**
-	 * 
-	 */
+public class ChatRoomBox extends JPanel {
 	private static final long serialVersionUID = 7410115339163008109L;
 	private JLabel chatroombox_title;
 	public JButton usersPfImgOne;
@@ -25,10 +22,8 @@ public class ChatRoomBoxTest extends JPanel {
 	public JButton usersPfImgF_2;
 	public JButton usersPfImgF_3;
 	public JButton usersPfImgF_4;
-	/**
-	 * Create the panel.
-	 */
-	public ChatRoomBoxTest(String title, JavaObjClientMain testview) { // ¿ÃπÃ¡ˆ ¥ÎΩ≈ ∫‰ ªÛº”
+
+	public ChatRoomBox(String title, JavaObjClientMain mainview) { // ¿ÃπÃ¡ˆ ¥ÎΩ≈ ∫‰ ªÛº”
 		String[] ul = title.trim().split(", ");
 		
 		setLayout(null); // absolute layout
@@ -100,26 +95,26 @@ public class ChatRoomBoxTest extends JPanel {
 		usersPfImgF_4.setFocusPainted(false);
 				
 		if(ul.length == 1) {
-			usersPfImgOne.setIcon(testview.getUserProfile(ul[0])); // ∏ﬁ¿Œø°º≠ ¿ÃπÃ¡ˆ πﬁæ∆ø»
+			usersPfImgOne.setIcon(mainview.getUserProfile(ul[0], 40, 36)); // ∏ﬁ¿Œø°º≠ ¿ÃπÃ¡ˆ πﬁæ∆ø»
 			add(usersPfImgOne);
 		} else if (ul.length == 2) {
 			usersPfImgTwo_1.setText(ul[0]);
-			usersPfImgTwo_1.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgTwo_1.setIcon(mainview.getUserProfile(ul[0], 36, 30));
 			usersPfImgTwo_1.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			usersPfImgTwo_2.setText(ul[1]);
-			usersPfImgTwo_2.setIcon(testview.getUserProfile(ul[1]));
+			usersPfImgTwo_2.setIcon(mainview.getUserProfile(ul[1], 36, 30));
 			usersPfImgTwo_2.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			add(usersPfImgTwo_1);
 			add(usersPfImgTwo_2);
 		} else if (ul.length == 3) {
 			usersPfImgTh_1.setText(ul[0]);
-			usersPfImgTh_1.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgTh_1.setIcon(mainview.getUserProfile(ul[0], 30, 24));
 			usersPfImgTh_1.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			usersPfImgTh_2.setText(ul[1]);
-			usersPfImgTh_2.setIcon(testview.getUserProfile(ul[1]));
+			usersPfImgTh_2.setIcon(mainview.getUserProfile(ul[1], 30, 24));
 			usersPfImgTh_2.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			usersPfImgTh_3.setText(ul[2]);
-			usersPfImgTh_3.setIcon(testview.getUserProfile(ul[2]));
+			usersPfImgTh_3.setIcon(mainview.getUserProfile(ul[2], 30 ,24));
 			usersPfImgTh_3.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			
 			add(usersPfImgTh_1);
@@ -127,16 +122,16 @@ public class ChatRoomBoxTest extends JPanel {
 			add(usersPfImgTh_3);
 		} else {
 			usersPfImgF_1.setText(ul[0]);
-			usersPfImgF_1.setIcon(testview.getUserProfile(ul[0]));
+			usersPfImgF_1.setIcon(mainview.getUserProfile(ul[0], 24, 16));
 			usersPfImgF_1.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			usersPfImgF_2.setText(ul[1]);
-			usersPfImgF_2.setIcon(testview.getUserProfile(ul[1]));
+			usersPfImgF_2.setIcon(mainview.getUserProfile(ul[1], 24, 16));
 			usersPfImgF_2.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			usersPfImgF_3.setText(ul[2]);
-			usersPfImgF_3.setIcon(testview.getUserProfile(ul[2]));
+			usersPfImgF_3.setIcon(mainview.getUserProfile(ul[2], 24, 16));
 			usersPfImgF_3.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			usersPfImgF_4.setText(ul[3]);
-			usersPfImgF_4.setIcon(testview.getUserProfile(ul[3]));
+			usersPfImgF_4.setIcon(mainview.getUserProfile(ul[3], 24, 16));
 			usersPfImgF_4.setFont(new Font("±º∏≤√º", Font.PLAIN, 0));
 			
 			add(usersPfImgF_1);
@@ -176,7 +171,7 @@ public class ChatRoomBoxTest extends JPanel {
 			}
 		});
 	}
-	public String getChatroombox_title() {
+	public String getChatroomTitle() {
 		return chatroombox_title.getText();
 	}
 }
