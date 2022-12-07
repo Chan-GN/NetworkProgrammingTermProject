@@ -95,6 +95,7 @@ public class JavaObjClientMain extends JFrame {
 		chatRoomArea.setFont(new Font("굴림체", Font.PLAIN, 2));
 		chatRoomArea.setOpaque(false);
 		chat_scrollPane.setViewportView(chatRoomArea); // scrollpane에 chatRoomArea 추가
+		chat_scrollPane.setVisible(false);
 
 		JScrollPane myprofileArea = new JScrollPane();
 		myprofileArea.setBounds(64, 65, 320, 94);
@@ -112,7 +113,7 @@ public class JavaObjClientMain extends JFrame {
 		myprofile.setLayout(null);
 		myprofileArea.setViewportView(myprofile);
 
-		myprofileArea.setVisible(false);
+		myprofileArea.setVisible(true);
 
 		JLabel myprofilename = new JLabel(username);
 		myprofilename.setBounds(120, -70, 65, 18);
@@ -135,7 +136,7 @@ public class JavaObjClientMain extends JFrame {
 		myprofile.setLayout(null);
 		myprofileArea.setViewportView(myprofile);
 		
-		myprofileArea.setVisible(false);
+		myprofileArea.setVisible(true);
 		
 		JScrollPane friend_scrollPane = new JScrollPane();
 		friend_scrollPane.setBounds(64, 143, 320, 450);
@@ -158,9 +159,10 @@ public class JavaObjClientMain extends JFrame {
 
 		JLabel lblNewLabel_1 = new JLabel("친구"); // 테스트 라벨
 		friend_scrollPane.setColumnHeaderView(lblNewLabel_1);
-		friend_scrollPane.setVisible(false);
+//		friend_scrollPane.setVisible(false);
+		friend_scrollPane.setVisible(true);
 				
-		JLabel chatLabel = new JLabel("채팅"); // 디폴트 : 채팅
+		JLabel chatLabel = new JLabel("친구"); // 디폴트 : 채팅
 		chatLabel.setFont(new Font("굴림", Font.BOLD, 18));
 		chatLabel.setBounds(80, 25, 50, 32);
 		contentPane.add(chatLabel);
@@ -173,7 +175,7 @@ public class JavaObjClientMain extends JFrame {
 		ImageIcon chat_icon_o = new ImageIcon("src/resources/chatbtn_o.png");
 		ImageIcon chat_icon_c = new ImageIcon("src/resources/chatbtn_c.png");
 		
-		btnfriend = new JButton(friend_icon_n);
+		btnfriend = new JButton(friend_icon_c);
 		btnfriend.setBounds(8, 21, 45, 45);
 		btnfriend.setBorder(BorderFactory.createEmptyBorder());
 		btnfriend.setFocusPainted(false);
@@ -228,7 +230,7 @@ public class JavaObjClientMain extends JFrame {
 		});
 		contentPane.add(btnfriend);
 
-		btnchat = new JButton(chat_icon_c);
+		btnchat = new JButton(chat_icon_n);
 		btnchat.setBounds(8, 85, 45, 45);
 		btnchat.setBorder(BorderFactory.createEmptyBorder());
 		btnchat.setContentAreaFilled(false);
@@ -402,7 +404,7 @@ public class JavaObjClientMain extends JFrame {
 							frameY=getBounds().y;
 							new ChatRoomPlus(UserName, cm.con_user_list, mainview);
 							break;
-						case "777": // 클라에서 유저 Login 인식하면
+						case "100": // 클라에서 유저 Login 인식하면
 							String uls[] = cm.getData().split(","); // uls[n] = username OFF, 유저 분리
 							myprofile.setText(""); // JTextPane 초기화
 							friendListArea.setText(""); // JTextPane 초기화
@@ -423,7 +425,7 @@ public class JavaObjClientMain extends JFrame {
 								setUserInfoMap(uis[0], pf); // 정보 맵에 유저 이름, 프로필 사진 전달
  							}			
 							break;
-						case "888": // 888을 수신받으면
+						case "700": // 888을 수신받으면
 							setUserInfoMap(cm.getId(), cm.img); // 프로필 사진 변경 수신 시 해당하는 유저 프로필 사진 정보 변경
 							for(FriendListPanel fl : friend_lists) { // 리스트 루프를 돌며
 								if(fl.getFriendList_username().equals(cm.getId())) { // 패널의 이름과 이름이 같은 친구를 찾아서 ( 즉 변경 요청 본인 )
@@ -530,7 +532,7 @@ public class JavaObjClientMain extends JFrame {
 
 							}
 							break;
-						case "999": // 코드가 999라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
+						case "800": // 코드가 800라면 채팅방 정보를 담고 있는 패널을 채팅방 목록에 추가함
 							int len = chatRoomArea.getDocument().getLength();
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
 							String room_title = cm.selected_userlist.trim();
@@ -620,7 +622,7 @@ public class JavaObjClientMain extends JFrame {
 			Date now = new Date(); // 현재 날짜 및 시간을 계산해서
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd/HH-mm-ss초"); // 형식을 정하고
 			room_id = formatter.format(now); // 계산된 시간을 형식에 적용
-			ChatMsg obcm = new ChatMsg(UserName, "999", room_id);
+			ChatMsg obcm = new ChatMsg(UserName, "800", room_id);
 			obcm.selected_userlist = userlist;
 			oos.writeObject(obcm); // 여기서부터 하면됨 서버에서 수신하는지?
 		} catch (IOException e) {

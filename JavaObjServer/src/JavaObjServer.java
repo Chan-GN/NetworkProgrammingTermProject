@@ -327,7 +327,7 @@ public class JavaObjServer extends JFrame {
 		
 		public void WriteOneList(String msg) {
 			try {
-				ChatMsg obcm = new ChatMsg("SERVER", "777", msg);
+				ChatMsg obcm = new ChatMsg("SERVER", "100", msg);
 				oos.writeObject(obcm);
 			} catch (IOException e) {
 				System.out.println("ERRor!@@@"+this.UserName);
@@ -425,10 +425,6 @@ public class JavaObjServer extends JFrame {
 							Logout();
 							break;
 						} 
-//						else if (args[1].matches("/sleep")) {
-//							UserStatus = "S";
-//						} else if (args[1].matches("/wakeup")) {
-//							UserStatus = "O";
 					else { // 일반 채팅 메시지
 							UserStatus = "O";
 							//WriteAll(msg + "\n"); // Write All
@@ -468,7 +464,10 @@ public class JavaObjServer extends JFrame {
 						Login();
 						Logout();
 						break;
-					} 
+					}
+					else if (cm.getCode().equals("500")) {
+						WriteAllObject(cm);
+					}
 					else if (cm.getCode().equals("600")) { // 리스트 처리
 						for (int i = 0; i < user_vc.size(); i++) {
 							UserService user = (UserService) user_vc.elementAt(i);
@@ -484,12 +483,7 @@ public class JavaObjServer extends JFrame {
 						cm.con_user_list = ul;
 						WriteOneTest(cm);
 					}
-					else if (cm.getCode().equals("777")) {
-						System.out.print(user_list);
-					} 
-					else if (cm.getCode().equals("500")) {
-						WriteAllObject(cm);
-					} else if (cm.getCode().equals("888")) { // 프로필 사진 변경 요청, 객체 그대로 전달해준다
+					else if (cm.getCode().equals("700")) { // 프로필 사진 변경 요청, 객체 그대로 전달해준다
 						for(int i=0; i < loguser_vc.size(); i++) {
 							UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
 							if(cm.getId().equals(loguser.logusername)) {
@@ -497,7 +491,7 @@ public class JavaObjServer extends JFrame {
 							}
 						}
 						WriteAllObject(cm);
-					} else if (cm.getCode().equals("999")) { // 채팅방 ID를 받으면
+					} else if (cm.getCode().equals("800")) { // 채팅방 ID를 받으면
 //						WriteAllObject(cm); // 방은 여러개지만 모두에게 방송, 추후 변경 예정
 //						System.out.println(cm.selected_userlist);
 //						System.out.println(cm.getData()); // 채팅방 ID 콘솔에 찍어보고

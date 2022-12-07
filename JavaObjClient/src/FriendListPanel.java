@@ -22,12 +22,15 @@ public class FriendListPanel extends JPanel {
 	private Frame frame;
 	private FileDialog fd;
 	public JavaObjClientMain mainview; // 뷰의 SendObject 활용을 위해
-	public FriendListPanel view;
+	public FriendListPanel fview;
 	public ImageIcon profile;
+	public int frameX;
+	public int frameY;
 
 	public FriendListPanel(ImageIcon profile, String username, JavaObjClientMain view, String userstatus) { // 뷰를 인자로 얻어옴
 		this.profile = profile;
 		mainview = view;
+		fview = this;
 		setLayout(null); // absolute layout
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(320,70)); // 높이 설정만 가능한듯 ?
@@ -132,14 +135,17 @@ public class FriendListPanel extends JPanel {
 						if(fd.getFile() == null) {
 //							System.out.println("취소됨");
 						} else {
-							ChatMsg obcm = new ChatMsg(username, "888", "PROFILEIMG"); // 사진이 선택되면 888 코드와
+							ChatMsg obcm = new ChatMsg(username, "700", "PROFILEIMG"); // 사진이 선택되면 888 코드와
 							ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile()); // 변경하고자 하는 이미지 아이콘을
 							obcm.setImg(img); // 객체에 담아
 							mainview.SendObject(obcm); // 메인뷰의 SendObject 호출
 						}	
 					}
 				} else {
-					OthersProfileImage profileViewer = new OthersProfileImage();
+					mainview.frameX = mainview.getBounds().x;
+					mainview.frameY = mainview.getBounds().y;
+					OthersProfileImage profileViewer = new OthersProfileImage(mainview);
+					profileViewer.setUserName(FriendList_username.getText());
 					profileViewer.setProfileImage(profileBtn.getIcon());
 				}
 			}

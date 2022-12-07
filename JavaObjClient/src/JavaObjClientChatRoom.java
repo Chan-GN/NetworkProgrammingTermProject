@@ -321,7 +321,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		listbtn.setBorder(BorderFactory.createEmptyBorder());
 		listbtn.setContentAreaFilled(false);
 		setHandCursor(listbtn);
-		contentPane.add(listbtn);
+//		contentPane.add(listbtn);
 		
 		
 		JPanel panel = new JPanel();
@@ -520,7 +520,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		SimpleAttributeSet left = new SimpleAttributeSet();
 		StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
 		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), left, true);
-		OthersChatPanel ocp = new OthersChatPanel();
+		OthersChatPanel ocp = new OthersChatPanel(mainview);
 		ocp.profileBtn.setIcon(mainview.getUserProfile(username, 40, 36));
 		ocp.username.setText(username);
 		JLabel chatLabel = new JLabel(msg);

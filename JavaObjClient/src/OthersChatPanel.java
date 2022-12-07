@@ -16,7 +16,7 @@ public class OthersChatPanel extends JPanel {
 	public JButton profileBtn;
 	public JLabel username;
 	
-	public OthersChatPanel() {
+	public OthersChatPanel(JavaObjClientMain view) {
 		setPreferredSize(new Dimension(400, 50));
 		setBackground(new Color(186, 206, 224));
 		setLayout(null);
@@ -32,8 +32,11 @@ public class OthersChatPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				OthersProfileImage profileViewer = new OthersProfileImage();
+				view.frameX = view.getBounds().x;
+				view.frameY = view.getBounds().y;
+				OthersProfileImage profileViewer = new OthersProfileImage(view);
 				profileViewer.setProfileImage(profileBtn.getIcon());
+				profileViewer.setUserName(username.getText());
 			}			
 		});
 
