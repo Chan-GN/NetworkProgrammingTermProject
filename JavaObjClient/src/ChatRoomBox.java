@@ -12,6 +12,8 @@ import javax.swing.JButton;
 public class ChatRoomBox extends JPanel {
 	private static final long serialVersionUID = 7410115339163008109L;
 	private JLabel chatroombox_title;
+	private JLabel last_chat;
+	private String room_id;
 	public JButton usersPfImgOne;
 	public JButton usersPfImgTwo_1;
 	public JButton usersPfImgTwo_2;
@@ -23,16 +25,22 @@ public class ChatRoomBox extends JPanel {
 	public JButton usersPfImgF_3;
 	public JButton usersPfImgF_4;
 
-	public ChatRoomBox(String title, JavaObjClientMain mainview) { // 이미지 대신 뷰 상속
+	public ChatRoomBox(String title, JavaObjClientMain mainview, String room_id) { // 이미지 대신 뷰 상속
 		String[] ul = title.trim().split(", ");
-		
+		this.room_id = room_id;
 		setLayout(null); // absolute layout
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(320,70)); // 높이 설정만 가능한듯 ?
 		chatroombox_title = new JLabel(title);
-		chatroombox_title.setBounds(69, 10, 169, 30);
+		chatroombox_title.setBounds(69, 12, 169, 23);
 		chatroombox_title.setFont(new Font("나눔고딕", Font.BOLD, 12));
 		add(chatroombox_title);
+		
+		last_chat = new JLabel("");
+		last_chat.setBounds(69, 37, 169, 15);
+		last_chat.setFont(new Font("나눔고딕", Font.PLAIN, 12));
+		last_chat.setForeground(new Color(115, 115, 115));
+		add(last_chat);
 
 		usersPfImgOne = new JButton(); // 기본 이미지 대신
 		usersPfImgOne.setBounds(9, 10, 48, 46);
@@ -174,4 +182,13 @@ public class ChatRoomBox extends JPanel {
 	public String getChatroomTitle() {
 		return chatroombox_title.getText();
 	}
+	
+	public void setLastChat(String last_chat) {
+		this.last_chat.setText(last_chat);
+	}
+	
+	public String getRoomId() {
+		return this.room_id;
+	}
+
 }

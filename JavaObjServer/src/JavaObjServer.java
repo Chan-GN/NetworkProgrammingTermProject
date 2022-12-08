@@ -295,6 +295,9 @@ public class JavaObjServer extends JFrame {
 										SendProfileFirst();
 										ChatMsg obcm = new ChatMsg(user.UserName, "666", room.RoomID);
 										obcm.selected_userlist = room.RoomUserlist;
+										String gl[] = room.RoomChat.split(", ");
+										String gl2[] = gl[gl.length-1].split(" ",2);
+										obcm.lastchat = gl2[1];
 										oos.writeObject(obcm);
 										
 									}

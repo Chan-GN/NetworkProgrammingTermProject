@@ -16,6 +16,7 @@ class ChatMsg implements Serializable {
 	public ImageIcon emoji;
 	public byte[] file;
 	public String filename;
+	public String lastchat;
 	
 	/* test code */
 	public String room_id;

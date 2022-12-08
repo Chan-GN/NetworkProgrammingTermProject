@@ -2,6 +2,8 @@
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -65,6 +67,7 @@ public class JavaObjClientChatRoom extends JFrame {
 	private JButton filebtn;
 	private JButton emobtn;
 	private JButton listbtn;
+	
 	
 	public JButton usersPfImgOne;
 	public JButton usersPfImgTwo_1;
@@ -634,7 +637,7 @@ public class JavaObjClientChatRoom extends JFrame {
 		textArea.replaceSelection("\n");
 	}
 	
-	public void AppendImage(ImageIcon ori_icon) {
+	public void AppendImage(ImageIcon ori_icon, String username) {
 		int len = textArea.getDocument().getLength();
 		textArea.setCaretPosition(len); // place caret at the end (with no selection)
 		Image ori_img = ori_icon.getImage();
@@ -655,7 +658,17 @@ public class JavaObjClientChatRoom extends JFrame {
 			}
 			Image new_img = ori_img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 			ImageIcon new_icon = new ImageIcon(new_img);
-			textArea.insertIcon(new_icon);
+			JLabel img_label = new JLabel(new_icon);
+			img_label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) 
+			    {
+			        ImageViewer imgview = new ImageViewer(mainview);
+			        imgview.setImage(new_icon);
+			        imgview.setUserName(username);
+			    }
+			});
+			textArea.insertComponent(img_label);
 		} else
 			textArea.insertIcon(ori_icon);
 		len = textArea.getDocument().getLength();

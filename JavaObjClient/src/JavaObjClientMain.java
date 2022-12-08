@@ -362,12 +362,22 @@ public class JavaObjClientMain extends JFrame {
 									mainchatview.AppendText(msg, cm.getId()); // 해당하는 채팅방에 AppendText 호출
 								}
 							}
+							
+							for(ChatRoomBox chatRoomlist: chatRoomlists) {
+								if(chatRoomlist.getRoomId().equals(cm.getRoomId())) {
+									String check[] = msg.split("`", -1);
+									if(check.length>1) {
+										msg = check[0];
+									}
+									chatRoomlist.setLastChat(msg);
+								}
+							}
 							break;
 						case "300": // Image 첨부
 							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
 								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서
 									mainchatview.AppendText("", cm.getId());
-									mainchatview.AppendImage(cm.img);
+									mainchatview.AppendImage(cm.img, cm.getId());
 								}
 							}
 							break;
@@ -375,7 +385,7 @@ public class JavaObjClientMain extends JFrame {
 							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
 								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
 									mainchatview.AppendText("", cm.getId());
-									mainchatview.AppendImage(cm.img);
+									mainchatview.AppendImage(cm.img, cm.getId());
 								}
 							}
 							break;
@@ -412,7 +422,9 @@ public class JavaObjClientMain extends JFrame {
 							chatRoomArea.setCaretPosition(l); // place caret at the end (with no selection)
 							String rt = cm.selected_userlist.trim();
 							rt = rt.replace(" ", ", ");
-							ChatRoomBox chatroombox2 = new ChatRoomBox(rt, mainview);
+							ChatRoomBox chatroombox2 = new ChatRoomBox(rt, mainview, cm.getData());
+							String cut[] = cm.lastchat.split("`", -1);
+							chatroombox2.setLastChat(cut[0]);
 							chatRoomlists.add(chatroombox2);
 //							System.out.println(cm.getData());
 							chatroombox2.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
@@ -587,7 +599,7 @@ public class JavaObjClientMain extends JFrame {
 							chatRoomArea.setCaretPosition(len); // place caret at the end (with no selection)
 							String room_title = cm.selected_userlist.trim();
 							room_title = room_title.replace(" ", ", ");
-							ChatRoomBox chatroombox = new ChatRoomBox(room_title, mainview);
+							ChatRoomBox chatroombox = new ChatRoomBox(room_title, mainview, cm.getData());
 							chatRoomlists.add(chatroombox);
 //							System.out.println(cm.getData());
 							chatroombox.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
