@@ -41,6 +41,7 @@ public class OthersProfileImage extends JFrame {
 	}
 	
 	public void setProfileImage(Icon icon) {
+		System.out.println(icon.toString());
 		profileImage.setIcon(makeFitImage(icon));
 	}
 	

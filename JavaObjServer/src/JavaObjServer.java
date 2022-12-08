@@ -50,6 +50,7 @@ public class JavaObjServer extends JFrame {
 	private Vector LoggedUserVec = new Vector();
 	
 	public ImageIcon profileBasic = new ImageIcon("src/resources/profileIMG_basic.png");
+	public ImageIcon profileBasic_s = new ImageIcon("src/profileIMG_basic.png");
 
 	/**
 	 * Launch the application.
@@ -277,6 +278,51 @@ public class JavaObjServer extends JFrame {
 					}
 			}
 		}
+		
+		public void WriteOneGo(String logUserName) {
+			for (int i = 0; i < user_vc.size(); i++) {
+				UserService user = (UserService) user_vc.elementAt(i);
+				if (user == this)
+					try {
+							for (int k = 0; k < room_vc.size(); k++) {
+								RoomService room = (RoomService) room_vc.elementAt(k);
+								String ru[] = room.RoomUserlist.split(" ");
+								for(int j = 0; j<ru.length; j++) {
+									if(ru[j].equals(logUserName)) {
+										SendProfileFirst();
+										ChatMsg obcm = new ChatMsg(user.UserName, "666", room.RoomID);
+										obcm.selected_userlist = room.RoomUserlist;
+										oos.writeObject(obcm);
+										
+									}
+								}								
+							}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
+		}
+		
+		public void SendProfileFirst() {
+			for(int i=0; i < loguser_vc.size(); i++) {
+				UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
+				
+				try {
+						ChatMsg obcm = new ChatMsg(loguser.logusername, "667", "PROFILE");
+						if(loguser.loguserprofileimg.toString().equals(profileBasic.toString())) {
+							obcm.profileImg = profileBasic_s;
+						} else {
+							obcm.profileImg = loguser.loguserprofileimg;							
+						}
+						oos.writeObject(obcm);										
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 
 		// Windows 처럼 message 제외한 나머지 부분은 NULL 로 만들기 위한 함수
 		public byte[] MakePacket(String msg) {
@@ -404,6 +450,8 @@ public class JavaObjServer extends JFrame {
 							UserLogService loguser = (UserLogService) loguser_vc.elementAt(i);
 							if(cm.getId().equals(loguser.logusername)){ // 해당 유저
 								loguser.loguserstatus = "ON"; // 유저의 상태를 ON으로
+								System.out.println(loguser.loguserprofileimg.toString()+"fsefse");
+								WriteOneGo(loguser.logusername);
 							}
 						}
 						if(!user_list.contains(UserName)) { // 로그에 저장되어 있지 않은 이름이라면

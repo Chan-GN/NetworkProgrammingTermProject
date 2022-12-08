@@ -404,6 +404,55 @@ public class JavaObjClientMain extends JFrame {
 							frameY=getBounds().y;
 							new ChatRoomPlus(UserName, cm.con_user_list, mainview);
 							break;
+						case "667":
+							setUserInfoMap(cm.getId(), cm.profileImg);
+							break;
+						case "666":
+							int l = chatRoomArea.getDocument().getLength();
+							chatRoomArea.setCaretPosition(l); // place caret at the end (with no selection)
+							String rt = cm.selected_userlist.trim();
+							rt = rt.replace(" ", ", ");
+							ChatRoomBox chatroombox2 = new ChatRoomBox(rt, mainview);
+							chatRoomlists.add(chatroombox2);
+//							System.out.println(cm.getData());
+							chatroombox2.addMouseListener(new MouseListener() { // 채팅방 클릭 리스너
+								@Override
+								public void mouseClicked(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public void mousePressed(MouseEvent e) { 
+									// TODO Auto-generated method stub
+									if (e.getClickCount()==2){ // 두번 클릭하면
+										frameX = getBounds().x;
+										frameY = getBounds().y;
+										mainchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), mainview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
+									}
+								}
+
+								@Override
+								public void mouseReleased(MouseEvent e) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public void mouseEntered(MouseEvent e) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void mouseExited(MouseEvent e) {
+									// TODO Auto-generated method stub
+								}			
+							});
+
+							chatRoomArea.insertComponent(chatroombox2);
+							chatRoomArea.replaceSelection("\n");
+
+							break;
 						case "100": // 클라에서 유저 Login 인식하면
 							String uls[] = cm.getData().split(","); // uls[n] = username OFF, 유저 분리
 							myprofile.setText(""); // JTextPane 초기화
