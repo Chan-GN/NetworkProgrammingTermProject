@@ -358,7 +358,7 @@ public class JavaObjClientMain extends JFrame {
 					switch (cm.getCode()) {
 						case "200": // chat message
 							for(JavaObjClientChatRoom mainchatview : mainchatviews) { // 유저의 채팅방들을 돌며
-								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서 
+								if(mainchatview.getRoomId().equals(cm.getRoomId())) { // 채팅방 이름을 검색해서
 									mainchatview.AppendText(msg, cm.getId()); // 해당하는 채팅방에 AppendText 호출
 								}
 							}
@@ -429,6 +429,7 @@ public class JavaObjClientMain extends JFrame {
 										frameX = getBounds().x;
 										frameY = getBounds().y;
 										mainchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), mainview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
+										getChatlog(cm.getData());
 									}
 								}
 
@@ -603,6 +604,7 @@ public class JavaObjClientMain extends JFrame {
 										frameX = getBounds().x;
 										frameY = getBounds().y;
 										mainchatviews.add(new JavaObjClientChatRoom(UserName, cm.getData(), mainview, cm.selected_userlist)); // cm.getData()에는 채팅방 이름이 담겨 있고 해당 채팅방 띄우기
+										getChatlog(cm.getData());
 									}
 								}
 
@@ -676,6 +678,16 @@ public class JavaObjClientMain extends JFrame {
 			oos.writeObject(obcm); // 여기서부터 하면됨 서버에서 수신하는지?
 		} catch (IOException e) {
 //			AppendText("SendObject Error");
+		}
+	}
+	
+	public void getChatlog(String room_id) {
+		ChatMsg obcm = new ChatMsg(UserName, "901", room_id);
+		try {
+			oos.writeObject(obcm);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

@@ -158,6 +158,7 @@ public class JavaObjServer extends JFrame {
 	class RoomService extends Thread { // 룸 정보를 관리
 		public String RoomID = "";
 		public String RoomUserlist = "";
+		public String RoomChat = "";
 	}
 	
 	class UserLogService extends Thread { // 유저 로그 서비스
@@ -371,6 +372,32 @@ public class JavaObjServer extends JFrame {
 			}
 		}
 		
+		public void sendChatLog (String chatlog, String room_id) {
+			try {
+				String cl[] = chatlog.split(", ");
+				for(int i=0; i<cl.length; i++) {
+					String ucl[] = cl[i].split(" ", 2);
+					ChatMsg obcm = new ChatMsg(ucl[0], "200", ucl[1]);
+					obcm.room_id = room_id;
+					oos.writeObject(obcm);
+				}
+				
+			} catch (IOException e) {
+				AppendText("dos.writeObject() error");
+				try {
+					oos.close();
+					client_socket.close();
+					client_socket = null;
+					ois = null;
+					oos = null;
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Logout(); // 에러가난 현재 객체를 벡터에서 지운다
+			}
+		}
+		
 		public void WriteOneList(String msg) {
 			try {
 				ChatMsg obcm = new ChatMsg("SERVER", "100", msg);
@@ -490,6 +517,8 @@ public class JavaObjServer extends JFrame {
 											}
 										}
 									}
+									
+									room.RoomChat += cm.getId() + " " + cm.getData() + ", ";
 								}
 							}
 							
@@ -555,6 +584,16 @@ public class JavaObjServer extends JFrame {
 							for (int j = 0; j <selectedOne.length; j++) {
 								if(user.UserName.equals(selectedOne[j])) {
 									user.WriteOneObject(cm);
+								}
+							}
+						}
+					} else if(cm.getCode().equals("901")) {
+						for (int k = 0; k < room_vc.size(); k++) {
+							RoomService room = (RoomService) room_vc.elementAt(k);
+							if (room.RoomID.equals(cm.getData())) {
+//								System.out.println(room.RoomUserlist);
+								if(!room.RoomChat.equals("")) {
+									sendChatLog(room.RoomChat, room.RoomID);								
 								}
 							}
 						}
