@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -516,6 +518,9 @@ public class JavaObjClientChatRoom extends JFrame {
 	}
 
 	public void AppendTextLeft(String msg, String username) {
+		String msg_t[] = msg.split("`", -1);
+		msg = msg_t[0];
+		
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet left = new SimpleAttributeSet();
 		StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
@@ -523,6 +528,14 @@ public class JavaObjClientChatRoom extends JFrame {
 		OthersChatPanel ocp = new OthersChatPanel(mainview);
 		ocp.profileBtn.setIcon(mainview.getUserProfile(username, 40, 36));
 		ocp.username.setText(username);
+		LocalDateTime now = LocalDateTime.now();
+		String time = now.format(DateTimeFormatter.ofPattern(" a HH:mm"));
+		JLabel timeLabel; 
+		if(msg_t.length > 1)
+			timeLabel = new JLabel(" " + msg_t[1]);
+		else
+			timeLabel = new JLabel(time);
+		timeLabel.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 10));
 		JLabel chatLabel = new JLabel(msg);
 		chatLabel.setOpaque(true);
 		chatLabel.setBackground(Color.white);
@@ -533,21 +546,33 @@ public class JavaObjClientChatRoom extends JFrame {
 		textArea.setCaretPosition(len);
 		if(!msg.equals("")) {
 			textArea.replaceSelection("\n");
+			textArea.insertComponent(timeLabel);
 			textArea.insertComponent(chatLabel);			
 		}
 	}
 	
 	public void AppendTextRight(String msg) {
+		String msg_t[] = msg.split("`", -1);
+		msg = msg_t[0];
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
 		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
 		doc.setParagraphAttributes(textArea.getSelectionStart(), textArea.getSelectionEnd(), right, false);
+		LocalDateTime now = LocalDateTime.now();
+		String time = now.format(DateTimeFormatter.ofPattern("a HH:mm "));
+		JLabel timeLabel; 
+		if(msg_t.length > 1)
+			timeLabel = new JLabel(msg_t[1] + " ");
+		else
+			timeLabel = new JLabel(time);
+		timeLabel.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 10));
 		if(!msg.equals("")) {
 			JLabel chatLabel = new JLabel(msg+"\n");
 			chatLabel.setOpaque(true);
 			chatLabel.setBackground(new Color(255, 235, 51));
 			chatLabel.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 14));
 			textArea.insertComponent(chatLabel);			
+			textArea.insertComponent(timeLabel);
 			int len = textArea.getDocument().getLength();
 			textArea.setCaretPosition(len);
 			textArea.replaceSelection("\n");

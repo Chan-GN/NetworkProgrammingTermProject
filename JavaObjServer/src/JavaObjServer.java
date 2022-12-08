@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -517,8 +519,9 @@ public class JavaObjServer extends JFrame {
 											}
 										}
 									}
-									
-									room.RoomChat += cm.getId() + " " + cm.getData() + ", ";
+									LocalDateTime now = LocalDateTime.now();
+									String time = now.format(DateTimeFormatter.ofPattern("a HH:mm"));
+									room.RoomChat += cm.getId() + " " + cm.getData() + "`" + time + ", ";
 								}
 							}
 							
